@@ -57,9 +57,10 @@ WORKDIR ${BENCH_PATH}
 
 # VPS releases pass a tested commit instead of following a moving branch.
 RUN if [ -n "${FRAPPE_REF}" ]; then \
-        git -C apps/frappe fetch origin "${FRAPPE_REF}" \
+        git -C apps/frappe fetch https://github.com/frappe/frappe.git "${FRAPPE_REF}" \
         && git -C apps/frappe checkout "${FRAPPE_REF}" \
-        && ./env/bin/pip install --no-cache-dir --editable ./apps/frappe; \
+        && ./env/bin/pip install --no-cache-dir --editable ./apps/frappe \
+        && yarn --cwd apps/frappe install --frozen-lockfile; \
     fi
 
 # Use the application source from this repository instead of fetching ERPNext.
