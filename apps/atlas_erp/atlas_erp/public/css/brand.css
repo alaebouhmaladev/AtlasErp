@@ -1,0 +1,8 @@
+/* Product theme; preserve all upstream login forms and authentication behavior. */
+body[data-path="login"]{background:#f6f8f4;color:#183b34}
+body[data-path="login"] .page-card{border:1px solid #e2e8e2;border-radius:18px;box-shadow:0 12px 40px rgba(18,62,54,.06)}
+body[data-path="login"] .app-logo{width:228px!important;max-width:100%;height:48px!important;object-fit:contain;object-position:left}
+body[data-path="login"] .page-card .es-button[data-variant="solid"]{background:#123e36;color:#fff;border-color:#123e36}
+body[data-path="login"] .form-control:focus{border-color:#587e5e;box-shadow:0 0 0 3px rgba(88,126,94,.15)}
+body[data-path="login"] a:focus-visible{outline:2px solid #587e5e;outline-offset:3px}
+body[data-path="login"][dir="rtl"] .app-logo{object-position:right}

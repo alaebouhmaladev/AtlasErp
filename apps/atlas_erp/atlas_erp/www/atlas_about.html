@@ -1,0 +1,17 @@
+{% extends "templates/web.html" %}
+{% block page_content %}
+<div class="py-5" style="max-width:720px;margin:auto">
+  <img src="/assets/atlas_erp/images/atlas-wordmark.svg" alt="ATLASERP" width="228" height="48">
+  <h1 class="mt-4">{{ _("About ATLASERP") }}</h1>
+  <p>{{ _("Business management for Morocco and African markets.") }}</p>
+  <p>{{ _("Version") }} {{ atlas_version }} · {{ _("Development preview") }}</p>
+  <h2 class="mt-4">{{ _("Open-source credits") }}</h2>
+  <p>ATLASERP builds on ERPNext by Frappe Technologies and contributors, licensed under
+    the GNU General Public License v3, and the Frappe Framework, licensed under MIT.</p>
+  <p>The upstream projects provide the underlying ERP engine and application framework.
+    ATLASERP is an independent product and is not endorsed by those projects.</p>
+  <p><a href="https://github.com/frappe/erpnext">ERPNext source and license</a> ·
+    <a href="https://github.com/frappe/frappe">Frappe source and license</a></p>
+  <p class="mt-4"><a href="/atlas">{{ _("Open ATLASERP") }} →</a></p>
+</div>
+{% endblock %}

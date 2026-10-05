@@ -1,0 +1,2 @@
+/* Limit styling to brand elements; do not alter accounting/POS form behavior. */
+.navbar .app-logo{max-height:34px;max-width:180px;object-fit:contain}

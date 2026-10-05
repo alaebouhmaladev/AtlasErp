@@ -1,21 +1,22 @@
 app_name = "erpnext"
-app_title = "ERPNext"
+app_title = "ATLASERP"
 app_publisher = "Frappe Technologies Pvt. Ltd."
-app_description = """ERP made simple"""
+app_description = """Business management for Morocco and African markets"""
 app_icon = "fa fa-th"
 app_color = "#e74c3c"
 app_email = "hello@frappe.io"
 app_license = "GNU General Public License (v3)"
 source_link = "https://github.com/frappe/erpnext"
-app_logo_url = "/assets/erpnext/images/erpnext-logo.svg"
-app_home = "/desk/home"
+app_logo_url = "/assets/atlas_erp/images/atlas-mark.svg"
+app_home = "/atlas"
 
 add_to_apps_screen = [
 	{
 		"name": app_name,
-		"logo": "/assets/erpnext/images/erpnext-logo.svg",
+		"logo": app_logo_url,
 		"title": app_title,
 		"route": app_home,
+		"desk_route": "/desk/home",
 		"has_permission": "erpnext.check_app_permission",
 		"sequence_id": 1,
 	}
@@ -134,8 +135,8 @@ calendars = ["Task", "Work Order", "Sales Order", "Holiday List", "ToDo"]
 website_generators = ["BOM", "Sales Partner"]
 
 website_context = {
-	"favicon": "/assets/erpnext/images/erpnext-favicon.svg",
-	"splash_image": "/assets/erpnext/images/erpnext-logo.svg",
+	"favicon": "/assets/atlas_erp/images/atlas-mark.svg",
+	"splash_image": "/assets/atlas_erp/images/atlas-wordmark.svg",
 }
 
 # nosemgrep
@@ -552,14 +553,12 @@ scheduler_events = {
 	],
 }
 
-email_brand_image = "assets/erpnext/images/erpnext-logo.jpg"
+email_brand_image = "assets/atlas_erp/images/atlas-wordmark.svg"
 
 default_mail_footer = """
 	<span>
 		Sent via
-		<a class="text-muted" href="https://frappe.io/erpnext?source=via_email_footer" target="_blank">
-			ERPNext
-		</a>
+		ATLASERP
 	</span>
 """
 

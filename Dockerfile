@@ -37,8 +37,8 @@ RUN apt-get update \
 # Keep Node aligned with this repository's CI configuration.
 COPY --from=node /usr/local/ /usr/local/
 
-RUN corepack enable \
-    && corepack prepare yarn@1.22.22 --activate \
+RUN rm -f /usr/local/bin/yarn /usr/local/bin/yarnpkg \
+    && npm install --global yarn@1.22.22 \
     && pip install --no-cache-dir frappe-bench \
     && useradd --create-home --shell /bin/bash frappe
 
@@ -56,11 +56,12 @@ WORKDIR ${BENCH_PATH}
 
 # Use the application source from this repository instead of fetching ERPNext.
 COPY --chown=frappe:frappe . apps/erpnext
+COPY --chown=frappe:frappe apps/atlas_erp apps/atlas_erp
 
-RUN printf 'frappe\nerpnext\n' > sites/apps.txt \
-    && ./env/bin/pip install --no-cache-dir --editable ./apps/erpnext \
+RUN printf 'frappe\nerpnext\natlas_erp\n' > sites/apps.txt \
+    && ./env/bin/pip install --no-cache-dir --editable ./apps/erpnext --editable ./apps/atlas_erp \
     && yarn --cwd apps/erpnext install --frozen-lockfile \
-    && bench build --app frappe --app erpnext \
+    && bench build --apps frappe,erpnext,atlas_erp \
     && find apps -type d -name node_modules -prune -o \
         -type d -name __pycache__ -prune -exec rm -rf '{}' +
 

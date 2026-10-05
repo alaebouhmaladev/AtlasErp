@@ -1,0 +1,16 @@
+{% extends "templates/web.html" %}
+{% block page_content %}
+<div class="py-5" style="max-width:720px;margin:auto">
+  <h1>{{ _("Getting started with ATLASERP") }}</h1>
+  <p>{{ _("Prepare your shop before recording your first sale.") }}</p>
+  <ol>
+    <li>{{ _("Sign in using your assigned account. The local setup administrator uses Administrator as the login name.") }}</li>
+    <li>{{ _("Complete company setup with your actual business details, Morocco and MAD.") }}</li>
+    <li>{{ _("Enable the Retail domain and create the warehouse for your shop.") }}</li>
+    <li>{{ _("Add products, barcodes and prices, then configure your POS profile and payment modes.") }}</li>
+    <li>{{ _("Open a cashier session before starting checkout.") }}</li>
+  </ol>
+  <p>{{ _("Ask your manager or accountant to review permissions and taxes before recording real transactions.") }}</p>
+  <p><a href="/atlas">{{ _("Open your workspace") }} →</a></p>
+</div>
+{% endblock %}

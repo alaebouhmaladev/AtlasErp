@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="{{ frappe.lang }}" dir="{{ 'rtl' if frappe.lang == 'ar' else 'ltr' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ATLASERP</title>
+  <link rel="icon" href="/assets/atlas_erp/images/atlas-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/atlas_erp/css/atlas.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">{{ _("Skip to content") }}</a>
+  <aside class="sidebar" aria-label="{{ _('Main navigation') }}">
+    <a class="brand" href="/atlas"><img src="/assets/atlas_erp/images/atlas-mark.svg" alt="" width="38" height="38">ATLAS<span>ERP</span></a>
+    <p class="nav-label">{{ _("YOUR BUSINESS") }}</p>
+    <a class="nav-item active" href="/atlas" aria-current="page">{{ _("Overview") }}</a>
+    {% for module in modules %}
+    <a class="nav-item" href="{{ module.href }}">{{ module.title }}</a>
+    {% endfor %}
+    <div class="sidebar-footer"><a href="/desk/home">{{ _("All business tools") }} ↗</a><p><a href="/atlas-about">{{ _("About ATLASERP") }}</a></p></div>
+  </aside>
+  <main id="main">
+    <header class="topbar"><span>{{ _("Business workspace") }}</span><a href="/desk/user-profile">{{ display_name | e }}</a></header>
+    <div class="content">
+      <p class="eyebrow">{{ _("WELCOME TO ATLASERP") }}</p>
+      <h1>{{ _("Your shop. One clear workspace.") }}</h1>
+      <p class="intro">{{ _("Open your checkout, manage stock and keep track of payments from one place.") }}</p>
+      <section class="welcome" aria-labelledby="start-title">
+        <div><span class="badge">{{ _("Retail foundation") }}</span><h2 id="start-title">{{ _("A good day starts with a ready shop.") }}</h2><p>{{ _("Set up your company, products and POS profile before your first sale.") }}</p></div>
+        <a class="button light" href="{{ '/desk/company' if can_setup else '/desk/home' }}">{{ _("Open company setup") if can_setup else _("Open ERP workspace") }} ↗</a>
+      </section>
+      <div class="section-heading"><h2>{{ _("Daily operations") }}</h2><span>{{ _("Choose a task to get started") }}</span></div>
+      <div class="module-grid">
+        {% for module in modules %}
+        <article class="module-card"><div class="module-number" aria-hidden="true">{{ '%02d' | format(loop.index) }}</div><h3><a href="{{ module.href }}">{{ module.title }} <span aria-hidden="true">↗</span></a></h3><p>{{ module.description }}</p>{% if module.new_href %}<a class="quick-action" href="{{ module.new_href }}">+ {{ module.action }}</a>{% else %}<a class="quick-action" href="{{ module.href }}">{{ _("Open") }} →</a>{% endif %}</article>
+        {% else %}<p>{{ _("No modules are available for your role. Ask your administrator to configure access.") }}</p>{% endfor %}
+      </div>
+      <p class="foundation-note">{{ _("Development preview: Moroccan localization and the redesigned checkout are coming in the next milestones.") }}</p>
+    </div>
+  </main>
+</body>
+</html>

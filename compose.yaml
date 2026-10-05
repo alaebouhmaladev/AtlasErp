@@ -1,0 +1,56 @@
+name: atlaserp-dev
+
+services:
+  db:
+    image: mariadb:11.8
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Run scripts/dev.sh init first}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - database:/var/lib/mysql
+    healthcheck:
+      test: [CMD, healthcheck.sh, --connect, --innodb_initialized]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  redis-cache:
+    image: redis:7-alpine
+  redis-queue:
+    image: redis:7-alpine
+
+  app:
+    build:
+      context: .
+      args:
+        FRAPPE_BRANCH: ${FRAPPE_BRANCH:-develop}
+    image: atlaserp-dev:local
+    working_dir: /home/frappe/frappe-bench
+    command: [bash, /workspace/scripts/start-dev.sh]
+    environment:
+      ATLAS_SITE: ${ATLAS_SITE:-atlas.localhost}
+      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Run scripts/dev.sh init first}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Run scripts/dev.sh init first}
+    ports:
+      - 127.0.0.1:${ATLAS_HTTP_PORT:-8000}:8000
+      - 127.0.0.1:${ATLAS_SOCKETIO_PORT:-9000}:9000
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - logs:/home/frappe/frappe-bench/logs
+      - ./erpnext:/home/frappe/frappe-bench/apps/erpnext/erpnext
+      - ./apps/atlas_erp:/home/frappe/frappe-bench/apps/atlas_erp
+      - ./scripts:/workspace/scripts:ro
+    depends_on:
+      db:
+        condition: service_healthy
+      redis-cache:
+        condition: service_started
+      redis-queue:
+        condition: service_started
+
+volumes:
+  database:
+  sites:
+  logs:
