@@ -5,6 +5,7 @@ FROM node:24-bookworm-slim AS node
 FROM python:3.14-slim-bookworm
 
 ARG FRAPPE_BRANCH=develop
+ARG FRAPPE_REF
 ARG BENCH_PATH=/home/frappe/frappe-bench
 
 ENV DEBIAN_FRONTEND=noninteractive \
@@ -53,6 +54,13 @@ RUN bench init \
         "${BENCH_PATH}"
 
 WORKDIR ${BENCH_PATH}
+
+# VPS releases pass a tested commit instead of following a moving branch.
+RUN if [ -n "${FRAPPE_REF}" ]; then \
+        git -C apps/frappe fetch origin "${FRAPPE_REF}" \
+        && git -C apps/frappe checkout "${FRAPPE_REF}" \
+        && ./env/bin/pip install --no-cache-dir --editable ./apps/frappe; \
+    fi
 
 # Use the application source from this repository instead of fetching ERPNext.
 COPY --chown=frappe:frappe . apps/erpnext

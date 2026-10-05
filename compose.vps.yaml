@@ -1,0 +1,88 @@
+name: atlaserp-vps
+
+x-runtime: &runtime
+  image: ${ATLAS_IMAGE:?Set ATLAS_IMAGE}
+  working_dir: /home/frappe/frappe-bench
+  restart: unless-stopped
+  volumes:
+    - sites:/home/frappe/frappe-bench/sites
+    - logs:/home/frappe/frappe-bench/logs
+  depends_on:
+    setup:
+      condition: service_completed_successfully
+
+services:
+  db:
+    image: mariadb:11.8
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Set DB_ROOT_PASSWORD}
+    command: [--character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci]
+    volumes:
+      - database:/var/lib/mysql
+    healthcheck:
+      test: [CMD, healthcheck.sh, --connect, --innodb_initialized]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+  redis-cache:
+    image: redis:7-alpine
+    restart: unless-stopped
+  redis-queue:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: [redis-server, --appendonly, 'yes']
+    volumes:
+      - queue:/data
+  setup:
+    image: ${ATLAS_IMAGE:?Set ATLAS_IMAGE}
+    working_dir: /home/frappe/frappe-bench
+    restart: 'no'
+    command: [bash, /workspace/setup-vps.sh]
+    environment:
+      ATLAS_SITE: ${ATLAS_SITE:-erp.atlasuse.site}
+      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Set DB_ROOT_PASSWORD}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD}
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - logs:/home/frappe/frappe-bench/logs
+      - ./scripts/setup-vps.sh:/workspace/setup-vps.sh:ro
+    depends_on:
+      db:
+        condition: service_healthy
+      redis-cache:
+        condition: service_started
+      redis-queue:
+        condition: service_started
+  backend:
+    <<: *runtime
+    command: [env/bin/gunicorn, --bind=0.0.0.0:8000, --workers=2, --threads=4, --worker-class=gthread, --timeout=120, --preload, frappe.app:application]
+  websocket:
+    <<: *runtime
+    command: [node, apps/frappe/socketio.js]
+  worker:
+    <<: *runtime
+    command: [bench, worker, --queue, short,default,long]
+  scheduler:
+    <<: *runtime
+    command: [bench, schedule]
+  frontend:
+    image: ${ATLAS_FRONTEND_IMAGE:?Set ATLAS_FRONTEND_IMAGE}
+    restart: unless-stopped
+    environment:
+      ATLAS_SITE: ${ATLAS_SITE:-erp.atlasuse.site}
+    ports:
+      - 127.0.0.1:${ATLAS_HTTP_PORT:-8085}:8080
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites:ro
+    depends_on:
+      backend:
+        condition: service_started
+      websocket:
+        condition: service_started
+
+volumes:
+  database:
+  sites:
+  logs:
+  queue:
