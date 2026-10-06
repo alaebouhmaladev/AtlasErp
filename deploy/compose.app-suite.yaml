@@ -1,0 +1,6 @@
+# Opt in to the optional app installation in dependency order.
+# Use after taking a site backup and validating the image on staging.
+services:
+  setup:
+    environment:
+      ATLAS_EXTRA_APPS: hrms whatsapp crm

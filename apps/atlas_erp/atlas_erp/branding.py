@@ -40,6 +40,13 @@ def apply_branding():
             })
     navbar.save(ignore_permissions=True)
 
+    # CRM supplies supported branding fields; keep its layouts, integrations,
+    # currency and access settings independent of product identity.
+    if frappe.db.exists("DocType", "FCRM Settings"):
+        frappe.db.set_single_value("FCRM Settings", {
+            "brand_name": "ATLAS CRM", "brand_logo": WORDMARK, "favicon": MARK,
+        })
+
     # The companion's old launcher entry was removed; preserve the same product
     # landing page for users who had selected it as their personal default.
     frappe.db.set_value("User", {"default_app": "atlas_erp"}, "default_app", "erpnext")
@@ -78,11 +85,17 @@ def apply_branding():
 
 def boot_session(bootinfo):
     """Brand display metadata while keeping app IDs, permissions and docks."""
+    from atlas_erp.app_catalog import APP_TITLES
+
     for app in bootinfo.get("app_data", []):
-        if app.get("app_name") == "frappe":
+        app_name = app.get("app_name")
+        if app_name in APP_TITLES:
+            app["app_title"] = APP_TITLES[app_name]
+            app["app_logo_url"] = MARK
+        elif app_name == "frappe":
             app["app_title"] = "ATLASERP Administration"
             app["app_logo_url"] = MARK
-        elif app.get("app_name") == "atlas_erp":
+        elif app_name == "atlas_erp":
             app["on_apps_screen"] = False
     bootinfo.atlas_brand = {"name": NAME, "mark": MARK, "home": "/atlas"}
 

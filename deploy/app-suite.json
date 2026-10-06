@@ -1,0 +1,25 @@
+{
+  "framework_ref": "459a849fa6e97510d00f260022419bfd03ca75d4",
+  "baseline_image": "atlaserp:65233c3cf3",
+  "install_order": ["hrms", "whatsapp", "crm"],
+  "apps": {
+    "hrms": {
+      "repository": "https://github.com/frappe/hrms.git",
+      "branch": "develop",
+      "ref": "062a8718e6fc9bbd6339c9b6c44780238ee668d3",
+      "display_name": "ATLAS HR"
+    },
+    "whatsapp": {
+      "repository": "https://github.com/frappe/whatsapp.git",
+      "branch": "develop",
+      "ref": "4b373470c95cb545ffab3927eee9304a9c6d5f09",
+      "purpose": "Required CRM dependency; external account configuration is separate"
+    },
+    "crm": {
+      "repository": "https://github.com/frappe/crm.git",
+      "branch": "develop",
+      "ref": "292e9f3d1f0f659b1733bc162ef3edaac124ba3a",
+      "display_name": "ATLAS CRM"
+    }
+  }
+}

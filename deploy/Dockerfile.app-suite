@@ -1,0 +1,29 @@
+# Pinned optional business apps on the tested ATLASERP runtime.
+ARG BASE_IMAGE=atlaserp:65233c3cf3
+FROM ${BASE_IMAGE}
+
+ARG HRMS_REF=062a8718e6fc9bbd6339c9b6c44780238ee668d3
+ARG WHATSAPP_REF=4b373470c95cb545ffab3927eee9304a9c6d5f09
+ARG CRM_REF=292e9f3d1f0f659b1733bc162ef3edaac124ba3a
+ENV NODE_OPTIONS=--max-old-space-size=1536
+
+RUN git clone --depth 1 --branch develop https://github.com/frappe/hrms.git apps/hrms \
+    && git -C apps/hrms fetch --depth 1 origin "${HRMS_REF}" \
+    && git -C apps/hrms checkout "${HRMS_REF}" \
+    && git clone --depth 1 --branch develop https://github.com/frappe/whatsapp.git apps/whatsapp \
+    && git -C apps/whatsapp fetch --depth 1 origin "${WHATSAPP_REF}" \
+    && git -C apps/whatsapp checkout "${WHATSAPP_REF}" \
+    && git clone --depth 1 --branch develop https://github.com/frappe/crm.git apps/crm \
+    && git -C apps/crm fetch --depth 1 origin "${CRM_REF}" \
+    && git -C apps/crm checkout "${CRM_REF}" \
+    && ./env/bin/pip install --no-cache-dir --editable ./apps/hrms --editable ./apps/whatsapp --editable ./apps/crm \
+    && yarn --cwd apps/hrms install --frozen-lockfile \
+    && yarn --cwd apps/whatsapp install --frozen-lockfile \
+    && yarn --cwd apps/crm install --frozen-lockfile \
+    && printf 'frappe\nerpnext\natlas_erp\nhrms\nwhatsapp\ncrm\n' > sites/apps.txt \
+    && bench build --apps hrms,whatsapp,crm \
+    && cp sites/assets/assets.json app-suite-assets.json
+
+COPY --chown=frappe:frappe apps/atlas_erp apps/atlas_erp
+COPY --chown=frappe:frappe scripts apps/erpnext/scripts
+RUN ./env/bin/pip install --no-cache-dir --no-deps --editable ./apps/atlas_erp

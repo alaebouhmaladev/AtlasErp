@@ -38,6 +38,7 @@ See [the setup guide](ATLASERP.md) for commands, prerequisites and development l
 - [Small development tickets](docs/atlas/BACKLOG.md)
 - [Android/iOS POS product plan and small delivery tasks](docs/atlas/MOBILE_POS.md)
 - [Architecture](docs/atlas/ARCHITECTURE.md)
+- [Business applications, versions and installation](docs/atlas/APPLICATIONS.md)
 - [UI and UX direction](docs/atlas/UX.md)
 - [Country localization](docs/atlas/LOCALIZATION.md)
 - [Branding implementation and verification](docs/atlas/BRANDING.md)
