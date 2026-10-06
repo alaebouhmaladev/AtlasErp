@@ -1,0 +1,10 @@
+{% extends "templates/web.html" %}
+{% block header %}<h1>{{ _("Your customer workspace") }}</h1>{% endblock %}
+{% block page_content %}
+<p>{{ _("Welcome") }}, {{ display_name | e }}.</p>
+<section class="atlas-portal-hero"><span>{{ _("CONNECTED WITH YOUR BUSINESS") }}</span><h2>{{ _("Everything you need. One clear place.") }}</h2><p>{{ _("Follow your documents, keep your details up to date and stay in touch with your team.") }}</p></section>
+<div class="atlas-portal-grid">
+{% for tool in tools %}<article class="atlas-portal-card"><span class="number" aria-hidden="true">{{ '%02d' | format(loop.index) }}</span><h3>{{ tool.title }}</h3><p>{{ tool.description }}</p><a href="{{ tool.href }}">{{ _("Open") }} →</a></article>{% endfor %}
+</div>
+<p class="mt-4 text-muted">{{ _("Your documents appear when your account is linked to your customer or supplier record. Contact your business team if access is missing.") }}</p>
+{% endblock %}

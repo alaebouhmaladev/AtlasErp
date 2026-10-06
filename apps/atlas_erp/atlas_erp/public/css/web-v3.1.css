@@ -1,0 +1,32 @@
+/* Shared skin for native customer lists, documents, account and login. */
+@media screen {
+ .navbar{background:var(--atlas-card);border-bottom:1px solid var(--atlas-line)}
+ .navbar .navbar-brand img{max-width:190px;max-height:40px;object-fit:contain}
+ .page-header h1,.page-header h2{color:var(--atlas-ink);letter-spacing:-.8px;font-weight:750}
+ .web-sidebar{background:var(--atlas-card);border:1px solid var(--atlas-line);border-radius:12px;padding:20px 14px}
+ .web-sidebar .sidebar-item a{display:block;padding:10px 12px;border-radius:8px;color:var(--atlas-muted)}
+ .web-sidebar .sidebar-item a.active,.web-sidebar .sidebar-item a:hover{background:var(--atlas-soft);color:var(--atlas-ink);text-decoration:none}
+ .web-list-item,.web-list .list-item,.transaction-list-item{background:var(--atlas-card);border:1px solid var(--atlas-line);border-radius:10px;padding:18px;margin-bottom:10px}
+ .page-card,.web-form,.account-settings,.order-container{background:var(--atlas-card);border:1px solid var(--atlas-line);border-radius:16px}
+ body[data-path="login"] .page-card{box-shadow:0 12px 40px rgb(18 62 54 / 6%)}
+ body[data-path="login"] .app-logo{width:228px!important;max-width:100%;height:48px!important;object-fit:contain}
+ .web-footer{border-color:var(--atlas-line);background:var(--atlas-paper)}
+ .atlas-portal-hero{background:#123e36;color:#fff;border-radius:18px;padding:32px;margin:24px 0}
+ .atlas-portal-hero h2{color:white;font-size:28px;font-weight:700;letter-spacing:-.6px}
+ .atlas-portal-hero p{color:#d2e3da;max-width:600px}
+ .atlas-portal-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+ .atlas-portal-card{display:flex;flex-direction:column;background:var(--atlas-card);border:1px solid var(--atlas-line);border-radius:12px;padding:24px;color:var(--atlas-ink)}
+ .atlas-portal-card h3{font-size:20px;font-weight:700;margin:20px 0 10px}
+ .atlas-portal-card p{color:var(--atlas-muted);flex:1}
+ .atlas-portal-card .number{background:var(--atlas-soft);border-radius:9px;padding:8px;width:38px;text-align:center}
+ .atlas-portal-card a{color:var(--atlas-ink);font-weight:650;border-top:1px solid var(--atlas-line);padding-top:16px}
+ .atlas-portal-return{display:block;margin-bottom:16px;font-weight:650}
+ @media(max-width:900px){.atlas-portal-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+ @media(max-width:600px){.atlas-portal-grid{grid-template-columns:1fr}.atlas-portal-hero{padding:24px}}
+}
+@media screen {
+ .page-header h1{font-size:clamp(28px,3.1vw,44px);line-height:1.2}
+ .web-sidebar li.title{list-style:none;font-size:11px;letter-spacing:1.5px;color:var(--atlas-muted);margin-bottom:18px}
+ .atlas-portal-card h3{color:var(--atlas-ink)}
+ @media(min-width:768px){.row[data-path]>.sidebar-column{flex:0 0 238px;max-width:238px}.row[data-path]>.main-column{flex:1;min-width:0;max-width:calc(100% - 238px)}}
+}

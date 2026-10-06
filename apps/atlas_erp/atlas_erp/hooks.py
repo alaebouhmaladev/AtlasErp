@@ -16,14 +16,17 @@ before_migrate = "atlas_erp.setup_install.install_roles"
 after_migrate = ["atlas_erp.branding.apply_branding", "atlas_erp.setup_install.install_roles"]
 boot_session = "atlas_erp.branding.boot_session"
 update_website_context = "atlas_erp.branding.website_context"
-web_include_css = ["/assets/atlas_erp/css/brand.css"]
-app_include_css = ["/assets/atlas_erp/css/desk-brand.css"]
-app_include_js = ["/assets/atlas_erp/js/brand.js"]
+web_include_css = ["/assets/atlas_erp/css/theme-v3.1.css", "/assets/atlas_erp/css/web-v3.1.css"]
+web_include_js = ["/assets/atlas_erp/js/web-v3.1.js"]
+app_include_css = ["/assets/atlas_erp/css/theme-v3.1.css", "/assets/atlas_erp/css/desk-v3.1.css"]
+app_include_js = ["/assets/atlas_erp/js/brand-v3.1.js"]
 website_context = {
     "favicon": app_logo_url,
     "splash_image": "/assets/atlas_erp/images/atlas-wordmark.svg",
 }
 website_route_rules = [
+    {"from_route": "/atlas-portal", "to_route": "atlas_portal"},
+    {"from_route": "/atlas-menu", "to_route": "atlas_menu"},
     {"from_route": "/atlas-setup", "to_route": "atlas_setup"},
     {"from_route": "/atlas-about", "to_route": "atlas_about"},
     {"from_route": "/atlas-guide", "to_route": "atlas_guide"},

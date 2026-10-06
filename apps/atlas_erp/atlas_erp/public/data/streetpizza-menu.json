@@ -1,0 +1,690 @@
+{
+  "source_url": "https://streetpizza.ma/",
+  "captured_on": "2026-10-06",
+  "currency": "MAD",
+  "business": {
+    "display_name": "Street Pizzeria Napoletana",
+    "website": "https://streetpizza.ma/",
+    "phone": "0657572308",
+    "address": "Angle Boulevard Roudani et Rue du Louvre, Maarif, Casablanca",
+    "city": "Casablanca",
+    "country": "Morocco",
+    "displayed_hours": "12:00 - 23:55",
+    "legal_company_name": null,
+    "ice": null,
+    "if": null,
+    "rc": null,
+    "tax_configuration": null
+  },
+  "items": [
+    {
+      "item_code": "SP-001",
+      "item_name": "LA MARINARA",
+      "category": "NOS PIZZAS NAPOLITAINES — AU FEU DE BOIS —",
+      "description": "Tomate Pelée, Basilic Frais, Ail, Huile d'Olive, Origan, Parmesan.",
+      "price_mad": 59.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-002",
+      "item_name": "LA VRAIE MARGHERITA",
+      "category": "NOS PIZZAS NAPOLITAINES — AU FEU DE BOIS —",
+      "description": "Tomate Pelée, Mozzarella Fleur de lait, Basilic Frais, Huile d'Olive, Parmesan.",
+      "price_mad": 69.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-003",
+      "item_name": "LA THON",
+      "category": "NOS PIZZAS NAPOLITAINES — AU FEU DE BOIS —",
+      "description": "Tomate Pelée, Mozzarella Fleur de lait, Thon, Oignons, Origan, Huile d'Olive, Parmesan.",
+      "price_mad": 75.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-004",
+      "item_name": "LA PESTO POULET",
+      "category": "NOS PIZZAS NAPOLITAINES — AU FEU DE BOIS —",
+      "description": "Sauce Fromagère Maison, Mozzarella Fleur de lait, Blanc de Poulet, Roquette, Ricotta, Basilic Frais, Sauce Pesto, Parmesan.",
+      "price_mad": 89.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-005",
+      "item_name": "LA QUATTRO FROMAGGI",
+      "category": "NOS PIZZAS NAPOLITAINES — AU FEU DE BOIS —",
+      "description": "Sauce Fromagère Maison, Mozzarella Fleur de lait, Bleu, Ricotta, Basilic Frais, Huile d'Olive, Parmesan.",
+      "price_mad": 79.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-006",
+      "item_name": "LA DIAVOLA PEPPERONI",
+      "category": "NOS PIZZAS NAPOLITAINES — AU FEU DE BOIS —",
+      "description": "Tomate Pelée, Mozzarella Fleur de lait, Pepperoni, Basilic Frais, Origan, Huile d'Olive,Parmesan.",
+      "price_mad": 79.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-007",
+      "item_name": "LA VEGGIE POWER",
+      "category": "NOS PIZZAS NAPOLITAINES — AU FEU DE BOIS —",
+      "description": "Tomate Pelée, Mozzarella Fleur de lait, Courgettes, Aubergines, Champignons Frais, Oignons, Roquette, Tomates Cerises, Huile d'Olive, Parmesan.",
+      "price_mad": 70.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-008",
+      "item_name": "LA BEEF",
+      "category": "NOS PIZZAS NAPOLITAINES — AU FEU DE BOIS —",
+      "description": "Tomate Pelée, Mozzarella Fleur de lait, Viande Hachée (Bœuf), Ciboulette, Oignons, Champignons Frais, Basilic Frais, Huile d'Olive, Parmesan.",
+      "price_mad": 85.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-009",
+      "item_name": "LA TRUFFA",
+      "category": "NOS PIZZAS NAPOLITAINES — AU FEU DE BOIS —",
+      "description": "Sauce Fromagère Maison, Mozzarella Fleur de lait, Crème de Truffe, Chèvre, Ricotta, Basilic Frais, Pousses D'épinards, Huile d'Olive, Noisettes, Parmesan.",
+      "price_mad": 95.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-010",
+      "item_name": "LA SCAMORZA FUNGHAI",
+      "category": "NOS PIZZAS NAPOLITAINES — AU FEU DE BOIS —",
+      "description": "Sauce Fromagère Maison, Scamorza Fumée, Mozzarella Fleur de lait, Champignons Frais, Tomates Séchées, Basilic Frais, Huile d'Olive, Parmesan.",
+      "price_mad": 89.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-011",
+      "item_name": "LA FÉTA",
+      "category": "NOS PIZZAS NAPOLITAINES — AU FEU DE BOIS —",
+      "description": "Tomate Pelée, Féta, Mozzarella Fleur de lait, Stracciatella, Basilic Frais, Pousses d'Épinards, Huile d'Olive, Noisettes, Tomates Cerises, Parmesan.",
+      "price_mad": 99.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-012",
+      "item_name": "LA BRESAOLA",
+      "category": "NOS PIZZAS NAPOLITAINES — AU FEU DE BOIS —",
+      "description": "Sauce Fromagère Maison, Bresaola, Roquette, Basilic Frais, Champignons Frais, Bleu, Chèvre, Stracciatella, Huile d'Olive, Noisettes, Parmesan.",
+      "price_mad": 139.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-013",
+      "item_name": "LA ANCHOVY",
+      "category": "NOS PIZZAS NAPOLITAINES — AU FEU DE BOIS —",
+      "description": "Sauce Fromagère Maison, Mozzarella Fleur de lait, Parmesan, Capre, Tomates Séchées,Anchois, Stracciatella, Huile d'Olive, Basilic Frais.",
+      "price_mad": 89.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-014",
+      "item_name": "LA CALZONE",
+      "category": "NOS PIZZAS NAPOLITAINES — AU FEU DE BOIS —",
+      "description": "Tomate Pelée, Mozzarella Fleur de lait, Salami, Chèvre, Huile d'Olive, Parmesan.",
+      "price_mad": 69.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-015",
+      "item_name": "LA SPECIAL STREET",
+      "category": "NOS PIZZAS NAPOLITAINES — AU FEU DE BOIS —",
+      "description": "Sauce Fromagère Maison, Sauce Pesto, Mozzarella Fleur de lait, Charcuterie, Basilic Frais,Chicken fingers, Parmesan, Stracciatella, Huile d'Olive, Noisettes.",
+      "price_mad": 99.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-016",
+      "item_name": "LA POLLO PICCANTE",
+      "category": "NOS PIZZAS NAPOLITAINES — AU FEU DE BOIS —",
+      "description": "Tomate Pelée. Mozzarella Fleur de lait, Poulet, Champignons Frais, Jalapenos, Huile d'Olive, Olive noir, Parmesan.",
+      "price_mad": 85.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-017",
+      "item_name": "LA BACON",
+      "category": "NOS PIZZAS NAPOLITAINES — AU FEU DE BOIS —",
+      "description": "Sauce Fromagère Maison. Bacon de Bœuf, Parmesan, Roquette, Basilic Frais, Champignons Frais, Bleu, Chèvre, Stracciatella, Huile d'Olive, Noisettes.",
+      "price_mad": 129.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-018",
+      "item_name": "LA CHORIZO CLASSICA",
+      "category": "NOS PIZZAS NAPOLITAINES — AU FEU DE BOIS —",
+      "description": "Tomate Pelée, Mozzarella Fleur de lait, Chorizo, Parmesan, Basilic, Origan, Huile d'Olive.",
+      "price_mad": 99.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-019",
+      "item_name": "LA NORDIQUE",
+      "category": "NOS PIZZAS NAPOLITAINES — AU FEU DE BOIS —",
+      "description": "Sauce Fromagère Maison, Mozzarella Fleur de lait, Ricotta, Saumon Fumé, Stracciatella,Ciboulette, Basilic Frais, Noisettes, Huile d'Olive, Parmesan.",
+      "price_mad": 125.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-020",
+      "item_name": "LA FRUTTI DI MARE",
+      "category": "NOS PIZZAS NAPOLITAINES — AU FEU DE BOIS —",
+      "description": "Tomate Pelée, Crevettes, Moules, Calamars, Mozzarella Fleur de lait, Tomate Cerise, Roquette, Basilic Frais, Huile d'Olive, Ail, Parmesan.",
+      "price_mad": 99.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-021",
+      "item_name": "LA BURRABOMBA Burrabomba",
+      "category": "NOS PIZZAS NAPOLITAINES — AU FEU DE BOIS —",
+      "description": "Tomate Pelée, Burrata, Roquette, Basilic Frais, Pousses d'Épinards, Sauce Pesto, Huile d'Olive, Noisettes, Tomates Cerises, Parmesan.",
+      "price_mad": 139.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-022",
+      "item_name": "STREET LUNCH — 49 DH",
+      "category": "STREET FORMULES",
+      "description": "Panuzzo + Frites + Soda = 49 DH",
+      "price_mad": 49.0,
+      "options": [
+        {
+          "label": "Frites",
+          "required_count": 1,
+          "choices": [
+            "Frites"
+          ]
+        },
+        {
+          "label": "Panuzzo",
+          "required_count": 1,
+          "choices": [
+            "Le Panozzo Charcuterie",
+            "Le Panozzo Thon",
+            "Le Panozzo Poulet"
+          ]
+        },
+        {
+          "label": "SODA",
+          "required_count": 1,
+          "choices": [
+            "COCA COLA",
+            "COCA COLA ZERO",
+            "HAWAI",
+            "SPRITE"
+          ]
+        }
+      ],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-023",
+      "item_name": "STREET TRIO PROMO",
+      "category": "STREET FORMULES",
+      "description": "Partagez le meilleur de Street Pizzeria Napoletana ! Choisissez 1 pizzas Classic, 2 pizza Premium et profitez de 3 boissons offertes. Une offre généreuse idéale pour les amis, collègues ou la famille.",
+      "price_mad": 219.0,
+      "options": [
+        {
+          "label": "Boissons",
+          "required_count": 3,
+          "choices": [
+            "Eau Minérale",
+            "Eau Gazeuse",
+            "COCA COLA",
+            "COCA COLA ZERO",
+            "HAWAI",
+            "SPRITE"
+          ]
+        },
+        {
+          "label": "Classic Pizzas",
+          "required_count": 1,
+          "choices": [
+            "LA CALZONE",
+            "LA VRAIE MARGHERITA",
+            "LA VEGGIE POWER",
+            "LA THON"
+          ]
+        },
+        {
+          "label": "Premium Pizzas",
+          "required_count": 2,
+          "choices": [
+            "LA SCAMORZA FUNGHAI",
+            "LA FRUTTI DI MARE",
+            "LA CHORIZO CLASSICA",
+            "LA ANCHOVY",
+            "LA PESTO POULET",
+            "LA QUATTRO FROMAGGI",
+            "LA BEEF",
+            "LA DIAVOLA PEPERONI",
+            "LA POLLO PICCANTE"
+          ]
+        }
+      ],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-024",
+      "item_name": "STREET DUO PROMO",
+      "category": "STREET FORMULES",
+      "description": "Choisissez 1 pizza Classic + 1 pizza Premium et profitez de 2 boissons offertes. L'offre idéale pour découvrir nos meilleures pizzas napolitaines à partager !",
+      "price_mad": 129.0,
+      "options": [
+        {
+          "label": "Boissons",
+          "required_count": 2,
+          "choices": [
+            "Eau Minérale",
+            "Eau Gazeuse",
+            "COCA COLA",
+            "COCA COLA ZERO",
+            "HAWAI",
+            "SPRITE"
+          ]
+        },
+        {
+          "label": "Classic Pizzas",
+          "required_count": 1,
+          "choices": [
+            "LA CALZONE",
+            "LA VRAIE MARGHERITA",
+            "LA VEGGIE POWER",
+            "LA THON"
+          ]
+        },
+        {
+          "label": "Premium Pizzas",
+          "required_count": 1,
+          "choices": [
+            "LA SCAMORZA FUNGHAI",
+            "LA CHORIZO CLASSICA",
+            "LA ANCHOVY",
+            "LA PESTO POULET",
+            "LA QUATTRO FROMAGGI",
+            "LA BEEF",
+            "LA DIAVOLA PEPERONI",
+            "LA POLLO PICCANTE"
+          ]
+        }
+      ],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-025",
+      "item_name": "La Bolognaise",
+      "category": "NOS PÂTES",
+      "description": "Pâtes. Tomate Pelée, Viande Hachée, Parmesan, Huile d'Olive, Basilic Frais.",
+      "price_mad": 69.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-026",
+      "item_name": "La Chicken Bacon Alfredo",
+      "category": "NOS PÂTES",
+      "description": "Pâtes. Sauce Fromagère Maison, Blanc de Poulet, Bacon Halal, Champignons Frais, Huiled'Olive, Parmesan, Ail.",
+      "price_mad": 85.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-027",
+      "item_name": "La Crispy Pesto Poulet",
+      "category": "NOS PÂTES",
+      "description": "Pâtes. Sauce Fromagère Maison, Chicken Crispy, Sauce Pesto, Huile d'Olive, Parmesan,Pistaches, Ciboulette, Ail.",
+      "price_mad": 79.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-028",
+      "item_name": "La Saumon Stracciatella",
+      "category": "NOS PÂTES",
+      "description": "Pâtes. Sauce Fromagère Maison, Saumon Fumé, Stracciatella, Huile d'Olive, Parmesan,Ciboulette, Aneth, Pistaches, Noisettes, Ail.",
+      "price_mad": 125.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-029",
+      "item_name": "La Mediterranea",
+      "category": "NOS PÂTES",
+      "description": "Pâtes. Tomate Pelée, Calamars, Crevettes, Moules, Sauce Pesto, Huile d'Olive, Parmesan,Ciboulette, Ail.",
+      "price_mad": 85.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-030",
+      "item_name": "Le Panozzo Charcuterie",
+      "category": "NOS CRÉATIONS & SANDWICHS",
+      "description": "Pain. Sauce Fromagère Maison, Ricotta, Charcuterie, Légumes grillés, Sauce pesto, Roquette,Huile d'olive, Parmesan.",
+      "price_mad": 49.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-031",
+      "item_name": "Le Panozzo Thon",
+      "category": "NOS CRÉATIONS & SANDWICHS",
+      "description": "Pain. Sauce Fromagère Maison, Ricotta, Thon, légumes grillés, Sauce pesto, Roquette, Huiled'olive, Parmesan.",
+      "price_mad": 49.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-032",
+      "item_name": "Le Panozzo Poulet",
+      "category": "NOS CRÉATIONS & SANDWICHS",
+      "description": "Pain. Sauce Fromagère Maison, Ricotta, Poulet, légumes grillés, Sauce pesto, Roquette, Huiled'olive, Parmesan.",
+      "price_mad": 55.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-033",
+      "item_name": "Le Panozzo Saumon Fumé",
+      "category": "NOS CRÉATIONS & SANDWICHS",
+      "description": "Pain. Sauce Fromagère Maison, Ricotta, Saumon Fumé, légumes grillés, Sauce pesto,Roquette, Huile d'olive, Parmesan.",
+      "price_mad": 69.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-034",
+      "item_name": "Le Panozzo Beef",
+      "category": "NOS CRÉATIONS & SANDWICHS",
+      "description": "Pain. Tomate Pelée, Viande hachée, légumes grillés, oignons, champignons Frais, Parmesan,Huile d'olive, Basilic Frais.",
+      "price_mad": 59.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-035",
+      "item_name": "Le Panozzo Bresaola & Stracciatella",
+      "category": "NOS CRÉATIONS & SANDWICHS",
+      "description": "Pain. Sauce pesto, Bresaola, Stracciatella, Tomates Cerises, Roquette, Crème balsamique,Parmesan.",
+      "price_mad": 75.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-036",
+      "item_name": "Street Burger",
+      "category": "NOS BURGERS",
+      "description": "Pain. Viande hachée, Mozzarella, Oignons caramélisés, Cornichons, Pousses d'épinards,Sauce BBQ, Parmesan.",
+      "price_mad": 59.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-037",
+      "item_name": "Ciao Burger",
+      "category": "NOS BURGERS",
+      "description": "Pain. Viande hachée, Mozzarella, Stracciatella, Champignons cuits, Oignons caramélisés,Cornichons, Pousses d'épinards, Tomates séchées, Sauce Pesto, Parmesan.",
+      "price_mad": 69.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-038",
+      "item_name": "Crispy Burger",
+      "category": "NOS BURGERS",
+      "description": "Pain. Poulet Crispy, Sauce Fromagère Maison, Mozzarella, Roquette, Tomates cerises fraîches,Oignons caramélisés, Cornichons, Parmesan, Sauce BBQ, Sauce Pesto.",
+      "price_mad": 69.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-039",
+      "item_name": "Burraburger",
+      "category": "NOS BURGERS",
+      "description": "Pain. Viande hachée, Mozzarella, Burrata, Champignons cuits, Oignons caramélisés,Cornichons, Pousses d'épinards, Tomates séchées, Sauce Pesto, Parmesan.",
+      "price_mad": 99.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-040",
+      "item_name": "Salade Burrata",
+      "category": "NOS SALADES FRAÎCHES",
+      "description": "Roquette. Tomates Cerises, Burrata, Sauce Pesto, Noisettes, Huile d'Olive.",
+      "price_mad": 99.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-041",
+      "item_name": "Salade Tomate Mozza",
+      "category": "NOS SALADES FRAÎCHES",
+      "description": "Tomates. Mozzarella Fleur de Lait, Basilic Frais, Sauce Pesto, Huile d'Olive.",
+      "price_mad": 45.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-042",
+      "item_name": "Salade Légumes Grillés",
+      "category": "NOS SALADES FRAÎCHES",
+      "description": "Roquette. Mix Légumes Grillés, Tomates Cerises, Parmesan, Huile d'Olive.",
+      "price_mad": 45.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-043",
+      "item_name": "Salade César Poulet",
+      "category": "NOS SALADES FRAÎCHES",
+      "description": "Roquette. Blanc de Poulet, Croûtons, Tomates Cerises, Parmesan, Sauce Fromagère Maison.",
+      "price_mad": 49.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-044",
+      "item_name": "Salade Street Pasta",
+      "category": "NOS SALADES FRAÎCHES",
+      "description": "Pâtes. Sauce Pesto, Mozzarella Fleur de Lait, Tomates Cerises, Olives Noires, Roquette,Parmesan.",
+      "price_mad": 55.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-045",
+      "item_name": "Salade Italienne",
+      "category": "NOS SALADES FRAÎCHES",
+      "description": "Roquette. Tomates Séchées, Charcuterie, Mozzarella Fleur de Lait, Champignons Frais, Huiled'Olive.",
+      "price_mad": 55.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-046",
+      "item_name": "La Pizza Nutella",
+      "category": "NOS DESSERTS",
+      "description": "La Pizza Nutella",
+      "price_mad": 49.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-047",
+      "item_name": "La Pizza Pistache",
+      "category": "NOS DESSERTS",
+      "description": "La Pizza Pistache",
+      "price_mad": 59.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-048",
+      "item_name": "Tiramisu Classico",
+      "category": "NOS DESSERTS",
+      "description": "Tiramisu Classico",
+      "price_mad": 49.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-049",
+      "item_name": "Tiramisu Pistache",
+      "category": "NOS DESSERTS",
+      "description": "Tiramisu Pistache",
+      "price_mad": 59.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-050",
+      "item_name": "Eau Minérale",
+      "category": "NOS BOISSONS",
+      "description": "Eau Minérale",
+      "price_mad": 12.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-051",
+      "item_name": "COCA COLA",
+      "category": "NOS BOISSONS",
+      "description": "COCA COLA",
+      "price_mad": 15.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-052",
+      "item_name": "COCA COLA ZERO",
+      "category": "NOS BOISSONS",
+      "description": "COCA COLA ZERO",
+      "price_mad": 15.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-053",
+      "item_name": "HAWAI",
+      "category": "NOS BOISSONS",
+      "description": "HAWAI",
+      "price_mad": 15.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-054",
+      "item_name": "SPRITE",
+      "category": "NOS BOISSONS",
+      "description": "SPRITE",
+      "price_mad": 15.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-055",
+      "item_name": "POMS",
+      "category": "NOS BOISSONS",
+      "description": "POMS",
+      "price_mad": 15.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-056",
+      "item_name": "SCHWEPPES CITRON",
+      "category": "NOS BOISSONS",
+      "description": "SCHWEPPES CITRON",
+      "price_mad": 15.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-057",
+      "item_name": "SCHWEPPES TONIC",
+      "category": "NOS BOISSONS",
+      "description": "SCHWEPPES TONIC",
+      "price_mad": 15.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-058",
+      "item_name": "OULMES",
+      "category": "NOS BOISSONS",
+      "description": "OULMES",
+      "price_mad": 12.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-059",
+      "item_name": "Jus d'Orange Frais",
+      "category": "JUS FRAIS",
+      "description": "Jus d'Orange Frais",
+      "price_mad": 20.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-060",
+      "item_name": "Jus de Citron",
+      "category": "JUS FRAIS",
+      "description": "Jus de Citron",
+      "price_mad": 20.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-061",
+      "item_name": "Le Vitaminé",
+      "category": "JUS FRAIS",
+      "description": "Betterave. Banane, Orange et Citron.",
+      "price_mad": 20.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-062",
+      "item_name": "Street",
+      "category": "JUS FRAIS",
+      "description": "Carotte et Orange.",
+      "price_mad": 20.0,
+      "options": [],
+      "detail_verified": true
+    },
+    {
+      "item_code": "SP-063",
+      "item_name": "Mojito",
+      "category": "JUS FRAIS",
+      "description": "Mojito",
+      "price_mad": 25.0,
+      "options": [],
+      "detail_verified": true
+    }
+  ]
+}

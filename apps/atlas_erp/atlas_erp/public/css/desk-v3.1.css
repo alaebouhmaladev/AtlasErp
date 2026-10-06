@@ -1,0 +1,37 @@
+/* Native Desk keeps its layout, permissions, table sizing and action handlers. */
+@media screen {
+ .navbar .app-logo{max-height:34px;max-width:180px;object-fit:contain}
+ .layout-main-section-wrapper,.layout-main-section,.page-container,.page-head{background:var(--atlas-paper)}
+ .body-sidebar{background:var(--atlas-card);border-color:var(--atlas-line)}
+ .body-sidebar .standard-sidebar-item,.desk-sidebar .standard-sidebar-item{border-radius:8px}
+ .body-sidebar .standard-sidebar-item.selected,.body-sidebar .standard-sidebar-item:hover,.desk-sidebar .standard-sidebar-item.selected{background:var(--atlas-soft);color:var(--atlas-ink)}
+ .page-title .title-text,.page-head h3{color:var(--atlas-ink);font-weight:700;letter-spacing:-.6px}
+ .frappe-card,.widget,.form-layout,.list-view,.report-wrapper,.dashboard-graph{border-radius:12px;border-color:var(--atlas-line)}
+ .frappe-card,.widget,.form-layout{background:var(--atlas-card)}
+ .form-tabs-list{background:var(--atlas-card);border-bottom:1px solid var(--atlas-line)}
+ .form-tabs-list .nav-link.active{color:var(--atlas-green);border-color:var(--atlas-green)}
+ .form-section .section-head{font-weight:650;color:var(--atlas-ink)}
+ .list-row-head{background:var(--atlas-soft);border-color:var(--atlas-line)}
+ .list-row-container:hover{background:var(--atlas-paper)}
+ .list-row-container,.grid-heading-row,.grid-row{border-color:var(--atlas-line)}
+ .modal-content{border:1px solid var(--atlas-line);border-radius:18px;background:var(--atlas-card);box-shadow:0 18px 70px rgb(18 62 54 / 15%)}
+ .modal-header,.modal-footer{border-color:var(--atlas-line)}
+ .dropdown-menu,.awesomplete>ul{border-radius:10px;border-color:var(--atlas-line)}
+ .atlas-workspace-link{display:flex;align-items:center;gap:10px;margin:10px 12px;padding:10px 12px;border:1px solid var(--atlas-line);border-radius:10px;color:var(--atlas-ink);font-weight:650;text-decoration:none}
+ .atlas-workspace-link:hover{background:var(--atlas-soft);text-decoration:none}
+ .atlas-workspace-link img{width:26px;height:26px}
+ .point-of-sale-app .pos-card,.point-of-sale-app>.items-selector,.point-of-sale-app>.customer-cart-container,.point-of-sale-app>.payment-container{border:1px solid var(--atlas-line);border-radius:16px;box-shadow:var(--card-shadow)}
+ .point-of-sale-app .item-wrapper{border-radius:10px;border-color:var(--atlas-line)}
+ .point-of-sale-app .primary-action{background:var(--atlas-lime);color:#123e36;border-radius:10px;font-weight:700}
+ .point-of-sale-app .primary-action:focus-visible{outline:3px solid var(--atlas-focus)}
+ .point-of-sale-app .item-wrapper:hover{background:var(--atlas-soft)}
+ /* Wide ledgers remain scrollable, not compressed or clipped. */
+ .datatable{--dt-border-color:var(--atlas-line);--dt-primary-color:var(--atlas-green);--dt-light-bg:var(--atlas-soft)}
+ @media(max-width:767px){.atlas-workspace-link{margin:8px}.page-title .title-text{font-size:22px}}
+}
+@media screen {
+ .body-sidebar .standard-sidebar-item.active-sidebar{background:var(--atlas-soft);color:var(--atlas-ink);box-shadow:none;font-weight:650}
+ .frappe-list{background:var(--atlas-card);border:1px solid var(--atlas-line);border-radius:12px}
+ .layout-main-list{background:var(--atlas-card);border-radius:12px}
+ .body-sidebar-container:not(.expanded) .body-sidebar.collapsed .atlas-workspace-link span{display:none}
+}

@@ -1,0 +1,54 @@
+@media screen {
+/* Shared ATLASERP design tokens. Status colors deliberately retain their meaning. */
+:root,[data-theme="light"] {
+ --atlas-ink:#183b34; --atlas-muted:#64736e; --atlas-paper:#f6f8f4;
+ --atlas-card:#fff; --atlas-line:#e2e8e2; --atlas-green:#123e36;
+ --atlas-lime:#ddf5a2; --atlas-soft:#edf3e6; --atlas-focus:#587e5e;
+ --bg-color:var(--atlas-paper); --fg-color:var(--atlas-card); --text-color:var(--atlas-ink);
+ --heading-color:var(--atlas-ink); --text-muted:var(--atlas-muted);
+ --primary:var(--atlas-green); --btn-primary:var(--atlas-green);
+ --control-bg:var(--atlas-paper); --border-color:var(--atlas-line);
+ --card-bg:var(--atlas-card); --fg-hover-color:var(--atlas-soft); --text-light:var(--atlas-muted);
+ --highlight-color:var(--atlas-soft); --bg-light-gray:var(--atlas-paper);
+ --surface-base:var(--atlas-card); --surface-gray-1:var(--atlas-paper);
+ --surface-gray-2:var(--atlas-soft); --surface-gray-3:#e7eee3;
+ --surface-sidebar:var(--atlas-card); --surface-elevation-1:var(--atlas-card);
+ --surface-elevation-2:var(--atlas-card); --surface-elevation-3:var(--atlas-card);
+ --surface-gray-10:var(--atlas-green); --ink-gray-9:var(--atlas-ink);
+ --ink-gray-8:#294b42; --ink-gray-7:#496259; --ink-gray-6:var(--atlas-muted);
+ --outline-gray-1:var(--atlas-line); --outline-gray-2:#d1ddd0;
+ --border-radius:8px; --border-radius-md:12px; --border-radius-lg:18px;
+ --focus-default:0 0 0 3px rgb(88 126 94 / 20%);
+ --card-shadow:0 3px 12px rgb(18 62 54 / 3%);
+}
+[data-theme="dark"] {
+ --atlas-ink:#e2eee5; --atlas-muted:#afc2b7; --atlas-paper:#10251f;
+ --atlas-card:#18352c; --atlas-line:#355147; --atlas-green:#ddf5a2;
+ --atlas-lime:#ddf5a2; --atlas-soft:#29463a; --atlas-focus:#ddf5a2;
+ --bg-color:var(--atlas-paper); --fg-color:var(--atlas-card); --text-color:var(--atlas-ink);
+ --heading-color:var(--atlas-ink); --text-muted:var(--atlas-muted);
+ --primary:var(--atlas-lime); --btn-primary:var(--atlas-lime);
+ --control-bg:var(--atlas-paper); --border-color:var(--atlas-line);
+ --card-bg:var(--atlas-card); --fg-hover-color:var(--atlas-soft); --text-light:var(--atlas-muted);
+ --highlight-color:var(--atlas-soft); --bg-light-gray:var(--atlas-paper);
+ --surface-base:var(--atlas-card); --surface-gray-1:var(--atlas-paper);
+ --surface-gray-2:var(--atlas-soft); --surface-gray-3:#355147;
+ --surface-sidebar:var(--atlas-card); --surface-elevation-1:var(--atlas-card);
+ --surface-elevation-2:var(--atlas-card); --surface-elevation-3:var(--atlas-card);
+ --surface-gray-10:var(--atlas-lime); --ink-gray-9:var(--atlas-ink);
+ --ink-gray-8:#d0e1d6; --ink-gray-7:#becfc4; --ink-gray-6:var(--atlas-muted);
+ --outline-gray-1:var(--atlas-line); --outline-gray-2:#557568;
+}
+@media screen {
+ body{background:var(--atlas-paper);color:var(--atlas-ink)}
+ :where(a,button,input,select,textarea,[tabindex]):focus-visible{outline:2px solid var(--atlas-focus);outline-offset:3px}
+ .btn-primary{background:var(--atlas-green);border-color:var(--atlas-green);color:#fff}
+ [data-theme="dark"] .btn-primary{color:#123e36}
+ .btn-primary:hover,.btn-primary:focus{background:#245c4c;border-color:#245c4c;color:white}
+ .es-button:not([data-theme="red"]){--bt-solid-bg:var(--atlas-green);--bt-solid-bg-hover:#245c4c;--bt-solid-bg-active:#123e36;--bt-solid-fg:#fff}
+ [data-theme="dark"] .es-button:not([data-theme="red"]){--bt-solid-fg:#123e36;--bt-solid-bg-hover:#cbe98b}
+ .form-control:focus{border-color:var(--atlas-focus);box-shadow:var(--focus-default)}
+ .form-control{border-radius:8px}
+}
+
+}
