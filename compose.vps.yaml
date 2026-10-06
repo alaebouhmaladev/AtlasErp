@@ -61,7 +61,7 @@ services:
     command: [node, apps/frappe/socketio.js]
   worker:
     <<: *runtime
-    command: [bench, worker, --queue, short,default,long]
+    command: [bench, worker, --queue, 'short,default,long']
   scheduler:
     <<: *runtime
     command: [bench, schedule]
