@@ -24,6 +24,9 @@ RUN git clone --depth 1 --branch develop https://github.com/frappe/hrms.git apps
     && bench build --apps hrms,whatsapp,crm \
     && cp sites/assets/assets.json app-suite-assets.json
 
+# Keep both manifests outside the persistent sites volume.
+RUN cp sites/assets/assets-rtl.json app-suite-assets-rtl.json
+
 COPY --chown=frappe:frappe apps/atlas_erp apps/atlas_erp
 COPY --chown=frappe:frappe scripts apps/erpnext/scripts
 RUN ./env/bin/pip install --no-cache-dir --no-deps --editable ./apps/atlas_erp
