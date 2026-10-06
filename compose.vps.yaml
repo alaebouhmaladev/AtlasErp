@@ -38,7 +38,7 @@ services:
     image: ${ATLAS_IMAGE:?Set ATLAS_IMAGE}
     working_dir: /home/frappe/frappe-bench
     restart: 'no'
-    command: [bash, /workspace/setup-vps.sh]
+    command: [bash, apps/erpnext/scripts/setup-vps.sh]
     environment:
       ATLAS_SITE: ${ATLAS_SITE:-erp.atlasuse.site}
       DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Set DB_ROOT_PASSWORD}
@@ -46,7 +46,6 @@ services:
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - logs:/home/frappe/frappe-bench/logs
-      - ./scripts/setup-vps.sh:/workspace/setup-vps.sh:ro
     depends_on:
       db:
         condition: service_healthy
