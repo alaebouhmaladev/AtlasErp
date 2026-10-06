@@ -1,0 +1,6 @@
+# syntax=docker/dockerfile:1
+ARG BASE_IMAGE=atlaserp:bbbded28064e
+FROM ${BASE_IMAGE}
+COPY --chown=frappe:frappe apps/atlas_erp /home/frappe/frappe-bench/apps/atlas_erp
+COPY --chown=frappe:frappe scripts /home/frappe/frappe-bench/apps/erpnext/scripts
+RUN ./env/bin/pip install --no-cache-dir --no-deps --editable ./apps/atlas_erp

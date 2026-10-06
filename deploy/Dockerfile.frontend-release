@@ -1,0 +1,5 @@
+# Incremental frontend for extension-only changes, keeping the same ERP engine assets.
+ARG BASE_FRONTEND=atlaserp-frontend:7f7cc8c1e2d6
+FROM ${BASE_FRONTEND}
+COPY apps/atlas_erp/atlas_erp/public/ /srv/assets/atlas_erp/
+RUN chmod -R a+rX /srv/assets/atlas_erp

@@ -69,3 +69,11 @@ Build new commit-tagged images, update image names in `.env`, and run Compose to
 recreate the services and setup container. Review migration compatibility first;
 switching to an older image does not reverse database migrations. Never run
 `docker compose down -v` on a site with data.
+
+For extension-only updates with unchanged ERPNext/Frappe and compiled assets, use
+`deploy/Dockerfile.release` with the previously verified app image as `BASE_IMAGE`
+and `deploy/Dockerfile.frontend-release` with its frontend as `BASE_FRONTEND`.
+These replace the ATLASERP extension and its plain public assets. Engine/dependency
+or compiled-bundle changes require the full build instead. Record the parent image
+and source commit with every release. Run only one Compose update at a time on a
+project so competing setup containers cannot interrupt migrations.

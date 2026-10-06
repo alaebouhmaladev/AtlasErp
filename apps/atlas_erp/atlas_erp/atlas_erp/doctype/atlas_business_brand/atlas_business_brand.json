@@ -1,0 +1,97 @@
+{
+ "doctype": "DocType",
+ "name": "Atlas Business Brand",
+ "module": "Atlas ERP",
+ "autoname": "hash",
+ "engine": "InnoDB",
+ "title_field": "brand_name",
+ "track_changes": 1,
+ "field_order": [
+  "brand_name",
+  "company",
+  "identity_key",
+  "business_type",
+  "logo",
+  "accent_color",
+  "disabled"
+ ],
+ "fields": [
+  {
+   "fieldname": "brand_name",
+   "fieldtype": "Data",
+   "label": "Brand name",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Legal company",
+   "options": "Company",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "identity_key",
+   "fieldtype": "Data",
+   "label": "Identity key",
+   "hidden": 1,
+   "read_only": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "business_type",
+   "fieldtype": "Select",
+   "label": "Business type",
+   "options": "Restaurant\nRetail",
+   "default": "Restaurant",
+   "reqd": 1
+  },
+  {
+   "fieldname": "logo",
+   "fieldtype": "Attach Image",
+   "label": "Brand logo"
+  },
+  {
+   "fieldname": "accent_color",
+   "fieldtype": "Data",
+   "label": "Brand colour",
+   "default": "#123e36"
+  },
+  {
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "label": "Disabled"
+  }
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "report": 1
+  },
+  {
+   "role": "ATLAS Owner",
+   "read": 1,
+   "write": 1,
+   "create": 1
+  },
+  {
+   "role": "ATLAS Manager",
+   "read": 1
+  },
+  {
+   "role": "ATLAS Cashier",
+   "read": 1
+  },
+  {
+   "role": "ATLAS Waiter",
+   "read": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

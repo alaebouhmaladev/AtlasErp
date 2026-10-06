@@ -1,7 +1,8 @@
 # Small development backlog
 
-Status: **Development foundation running locally**. Verification evidence is in
-`SETUP_LOG.md`. Shop onboarding and transaction workflows remain future tickets.
+Status: **Development foundation deployed; business setup milestone verified on staging**.
+The company/brand/branch/team implementation is documented in `ONBOARDING.md`.
+Catalog, POS profiles and transaction workflows remain future tickets.
 First vertical: retail and POS. Each ID is a bounded, independently reviewable task.
 
 ## Foundation tickets
@@ -30,11 +31,18 @@ Acceptance: fresh demo company configured without developer assistance; repeated
 steps create no duplicates; setup never changes another company's configuration.
 Depends on: F03, R01.
 
+Implemented part: company selection/native Company creation, brands, branches,
+dedicated warehouses and resumable team setup. POS profiles and country/accounting
+review remain separate work; R02 is not yet the full cashier-ready onboarding gate.
+
 ### R03 — Retail roles and branch restrictions
 Create reviewed role/permission fixtures for cashier, manager, owner and accountant.
 Acceptance: cashier cannot access restricted ledgers, edit prices or another shop's
 records through UI **or API**; manager exceptions are demonstrated.
 Depends on: R01–R02.
+
+Implemented part: ATLAS Owner/Manager/Cashier/Waiter business-metadata roles and
+company/branch scope hooks. Operational ledger/price/POS permissions remain pending.
 
 ### R04 — Small catalog entry
 Simple create/edit workflow for item, UOM, barcode and selling price.

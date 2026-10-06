@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="{{ frappe.lang }}" dir="{{ 'rtl' if frappe.lang == 'ar' else 'ltr' }}">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token | e }}">
+  <title>{{ title | e }}</title>
+  <link rel="icon" href="/assets/atlas_erp/images/atlas-mark.svg">
+  <link rel="stylesheet" href="/assets/atlas_erp/css/atlas.css">
+  <link rel="stylesheet" href="/assets/atlas_erp/css/setup.css">
+  <script src="/assets/atlas_erp/js/setup.js" defer></script>
+</head>
+<body class="setup-page">
+  <a class="skip-link" href="#main">{{ _("Skip to content") }}</a>
+  <header class="setup-header"><a class="brand" href="/atlas"><img src="/assets/atlas_erp/images/atlas-mark.svg" alt="" width="38" height="38">ATLAS<span>ERP</span></a><a href="/atlas">{{ _("Back to workspace") }} ↗</a></header>
+  <main id="main" class="setup-main">
+    <p class="eyebrow">{{ _("YOUR BUSINESS, ORGANIZED") }}</p>
+    <h1>{{ _("Company. Brand. Branch. Team.") }}</h1>
+    <p class="intro">{{ _("Set up your business structure once, then give each person the access they need.") }}</p>
+    <p id="notice" class="notice" role="status" aria-live="polite">{{ _("Loading your business…") }}</p>
+    <nav class="steps" aria-label="{{ _('Setup steps') }}"><a href="#company-step">01 {{ _("Company") }}</a><a href="#brand-step">02 {{ _("Brand") }}</a><a href="#branch-step">03 {{ _("Branch") }}</a><a href="#team-step">04 {{ _("Team") }}</a></nav>
+    <section id="company-step" class="setup-card"><span class="badge">01 · {{ _("LEGAL ENTITY") }}</span><h2>{{ _("Choose your company") }}</h2><p>{{ _("Your company owns accounting records. Brands and branches belong to it.") }}</p>
+      <label for="company">{{ _("Company") }}</label><select id="company"><option value="">{{ _("Choose a company") }}</option></select><p id="company-details" class="helper"></p>
+      <div id="company-admin" hidden><a class="text-link" href="/desk/company/new">+ {{ _("Create a legal company") }} ↗</a><p class="helper">{{ _("Use ERP company setup to choose Morocco, MAD and your chart of accounts. Return here when saved. Have an accountant review accounting and tax settings before live sales.") }}</p></div>
+      <button type="button" id="refresh">{{ _("Refresh setup") }}</button>
+    </section>
+    <div class="setup-grid">
+    <section id="brand-step" class="setup-card"><span class="badge">02 · {{ _("BUSINESS IDENTITY") }}</span><h2>{{ _("Create a brand") }}</h2><p>{{ _("A restaurant or shop identity, separate from the legal company.") }}</p>
+      <form id="brand-form"><label for="brand-name">{{ _("Brand name") }}</label><input id="brand-name" name="brand_name" required maxlength="100" placeholder="Atlas Bites">
+        <label for="business-type">{{ _("Business type") }}</label><select id="business-type" name="business_type"><option>Restaurant</option><option>Retail</option></select>
+        <label for="brand-colour">{{ _("Brand colour") }}</label><input id="brand-colour" type="color" name="accent_color" value="#123e36"><button class="primary" type="submit">{{ _("Save brand") }}</button></form>
+      <ul id="brands" class="record-list"></ul><p class="helper">{{ _("Open a saved brand to upload its logo or edit its identity.") }}</p>
+    </section>
+    <section id="branch-step" class="setup-card"><span class="badge">03 · {{ _("YOUR LOCATION") }}</span><h2>{{ _("Add a branch") }}</h2><p>{{ _("Each branch gets its own stock warehouse and staff assignments.") }}</p>
+      <form id="branch-form"><label for="branch-brand">{{ _("Brand") }}</label><select id="branch-brand" name="brand" required></select>
+        <label for="branch-name">{{ _("Branch name") }}</label><input id="branch-name" name="branch_name" required maxlength="100" placeholder="Casablanca Centre">
+        <label for="branch-code">{{ _("Branch code") }}</label><input id="branch-code" name="code" required pattern="[A-Za-z0-9-]{2,20}" maxlength="20" placeholder="CASA-01"><p class="helper">{{ _("Unique within this company. Letters, numbers and hyphens.") }}</p>
+        <label for="branch-city">{{ _("City") }}</label><input id="branch-city" name="city" maxlength="100" placeholder="Casablanca">
+        <label for="branch-address">{{ _("Address") }}</label><textarea id="branch-address" name="address" rows="2" maxlength="500"></textarea>
+        <p class="helper">{{ _("Saving creates a separate warehouse. No stock or financial transactions are posted.") }}</p><button class="primary" type="submit">{{ _("Save branch") }}</button></form><ul id="branches" class="record-list"></ul>
+    </section>
+    </div>
+    <section id="team-step" class="setup-card"><span class="badge">04 · {{ _("PEOPLE & ACCESS") }}</span><h2>{{ _("Build your team") }}</h2><p>{{ _("Assign one person to a branch. Owners manage their company; other staff see assigned branches.") }}</p>
+      <form id="team-form" class="team-grid"><div><label for="team-branch">{{ _("Branch") }}</label><select id="team-branch" name="branch" required></select></div><div><label for="staff-name">{{ _("First name") }}</label><input id="staff-name" name="first_name" required maxlength="100"></div><div><label for="staff-email">{{ _("Email") }}</label><input id="staff-email" name="email" type="email" required maxlength="140" autocomplete="off"></div><div><label for="staff-role">{{ _("Role") }}</label><select id="staff-role" name="staff_role"><option>Owner</option><option>Manager</option><option>Cashier</option><option>Waiter</option></select></div><button type="submit" class="primary">{{ _("Save staff access") }}</button></form>
+      <p class="helper">{{ _("Accounts with other ERP permissions require administrator review. Set a password through User management; invitation email is not configured yet.") }}</p>
+      <div class="table-wrap"><table><thead><tr><th>{{ _("Account") }}</th><th>{{ _("Branch") }}</th><th>{{ _("Role") }}</th><th>{{ _("Access") }}</th><th>{{ _("Action") }}</th></tr></thead><tbody id="team"></tbody></table></div>
+    </section>
+    <section class="next-card"><h2>{{ _("Next: checkout setup") }}</h2><p>{{ _("This milestone prepares your structure and staff access. POS profiles, products, waiter orders and kitchen screens follow in the next milestones.") }}</p><a href="/atlas">{{ _("Return to workspace") }} →</a></section>
+  </main>
+</body></html>

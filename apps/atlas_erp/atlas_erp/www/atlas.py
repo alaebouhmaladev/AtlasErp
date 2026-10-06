@@ -38,5 +38,6 @@ def get_context(context):
                 "new_href": f"/desk/{route}/new" if action and frappe.has_permission(doctype, "create") else None,
                 "action": action,
             })
-    context.can_setup = "System Manager" in frappe.get_roles()
+    context.can_setup = bool({"System Manager", "ATLAS Owner"} & set(frappe.get_roles()))
+    context.has_business_access = context.can_setup or any(r.startswith("ATLAS ") for r in frappe.get_roles())
     return context

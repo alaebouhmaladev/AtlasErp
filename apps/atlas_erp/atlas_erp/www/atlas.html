@@ -13,6 +13,7 @@
     <a class="brand" href="/atlas"><img src="/assets/atlas_erp/images/atlas-mark.svg" alt="" width="38" height="38">ATLAS<span>ERP</span></a>
     <p class="nav-label">{{ _("YOUR BUSINESS") }}</p>
     <a class="nav-item active" href="/atlas" aria-current="page">{{ _("Overview") }}</a>
+    {% if has_business_access %}<a class="nav-item" href="/atlas-setup">{{ _("Business & team") }}</a>{% endif %}
     {% for module in modules %}
     <a class="nav-item" href="{{ module.href }}">{{ module.title }}</a>
     {% endfor %}
@@ -26,7 +27,7 @@
       <p class="intro">{{ _("Open your checkout, manage stock and keep track of payments from one place.") }}</p>
       <section class="welcome" aria-labelledby="start-title">
         <div><span class="badge">{{ _("Retail foundation") }}</span><h2 id="start-title">{{ _("A good day starts with a ready shop.") }}</h2><p>{{ _("Set up your company, products and POS profile before your first sale.") }}</p></div>
-        <a class="button light" href="{{ '/desk/company' if can_setup else '/desk/home' }}">{{ _("Open company setup") if can_setup else _("Open ERP workspace") }} ↗</a>
+        <a class="button light" href="{{ '/atlas-setup' if can_setup else '/desk/home' }}">{{ _("Set up your business") if can_setup else _("Open ERP workspace") }} ↗</a>
       </section>
       <div class="section-heading"><h2>{{ _("Daily operations") }}</h2><span>{{ _("Choose a task to get started") }}</span></div>
       <div class="module-grid">

@@ -1,0 +1,93 @@
+{
+ "doctype": "DocType",
+ "name": "Atlas Team Member",
+ "module": "Atlas ERP",
+ "autoname": "hash",
+ "engine": "InnoDB",
+ "title_field": "user",
+ "track_changes": 1,
+ "field_order": [
+  "user",
+  "company",
+  "identity_key",
+  "branch",
+  "staff_role",
+  "enabled"
+ ],
+ "fields": [
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "Staff account",
+   "options": "User",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Legal company",
+   "options": "Company",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "identity_key",
+   "fieldtype": "Data",
+   "label": "Identity key",
+   "hidden": 1,
+   "read_only": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "branch",
+   "fieldtype": "Link",
+   "label": "Business branch",
+   "options": "Atlas Business Branch",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "staff_role",
+   "fieldtype": "Select",
+   "label": "Staff role",
+   "options": "Owner\nManager\nCashier\nWaiter",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enabled",
+   "default": "1"
+  }
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "report": 1
+  },
+  {
+   "role": "ATLAS Owner",
+   "read": 1
+  },
+  {
+   "role": "ATLAS Manager",
+   "read": 1
+  },
+  {
+   "role": "ATLAS Cashier",
+   "read": 1
+  },
+  {
+   "role": "ATLAS Waiter",
+   "read": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
