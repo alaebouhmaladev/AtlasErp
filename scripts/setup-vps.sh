@@ -12,6 +12,8 @@ bench set-config -g redis_cache redis://redis-cache:6379
 bench set-config -g redis_queue redis://redis-queue:6379
 bench set-config -g redis_socketio redis://redis-queue:6379
 bench set-config -gp socketio_port 9000
+bench set-config -g webserver_host backend
+bench set-config -gp webserver_port 8000
 if [[ ! -f "sites/${ATLAS_SITE}/site_config.json" ]]; then
     bench new-site "$ATLAS_SITE" --db-root-username root \
         --db-root-password "$DB_ROOT_PASSWORD" --mariadb-user-host-login-scope='%' \

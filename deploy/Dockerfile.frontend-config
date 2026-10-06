@@ -1,0 +1,4 @@
+# Update proxy configuration without recopying the unchanged static asset tree.
+ARG BASE_FRONTEND
+FROM ${BASE_FRONTEND}
+COPY deploy/nginx.conf /etc/nginx/templates/default.conf.template
