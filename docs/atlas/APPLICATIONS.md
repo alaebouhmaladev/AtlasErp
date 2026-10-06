@@ -2,8 +2,8 @@
 
 Requested on 2026-10-06: add applications beyond the ERP engine, beginning with
 HRMS and CRM. Exact upstream revisions and install order are recorded in
-[deploy/app-suite.json](../../deploy/app-suite.json). Deployment verification will
-be recorded below after staging checks and live installation finish.
+[deploy/app-suite.json](../../deploy/app-suite.json). Installation and verification
+completed on staging and the live site on 2026-10-06, with ATLASERP 0.4.0.
 
 ## Verification
 
@@ -21,7 +21,18 @@ Staging passed on 2026-10-06 with ATLASERP 0.4.0:
 - Company, menu, price, POS profile and transaction counts are unchanged.
   Existing customer portal, shared Desk assets and the 63-item menu checks pass.
 
-Live installation and verification are pending.
+Live installation also passed. HR employee lists and CRM leads render through
+public HTTPS; the existing ATLAS account can see all three product applications
+without role changes. HR Arabic styles are served. Authenticated WebSocket and
+same-origin browser polling connections pass; foreign-origin and missing
+cross-site-origin connections are rejected. Company/menu/profile and transaction
+counts match the snapshot taken immediately before installation. No employees,
+CRM leads or financial transactions were added by this task.
+
+Release source: `cbc6600c94`; backend `atlaserp:cbc6600c94`, frontend
+`atlaserp-frontend:cbc6600c94`. Full pre-install backup:
+`20261006_223215-erp_atlasuse_site-*`. The original environment is saved privately
+as `.env.before-app-suite-7488df70fe`. See [VPS_DEPLOYMENT.md](VPS_DEPLOYMENT.md).
 
 ## Applications and tools
 
@@ -55,7 +66,7 @@ Use `deploy/compose.app-suite.yaml` with `compose.vps.yaml` to opt into schema
 installation in dependency order: HRMS, WhatsApp, CRM. The ordinary setup script
 preserves all app packages present on the bench in `sites/apps.txt`.
 
-After setup completes, publish the optional bundle keys with
+After setup completes, publish the optional LTR and RTL bundle keys with
 `env/bin/python apps/erpnext/scripts/publish-app-suite-assets.py` and clear the
 site cache. Existing ERP/POS asset keys are preserved. All backend, worker,
 scheduler and websocket services must run the same candidate image.

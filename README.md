@@ -11,11 +11,15 @@ add other industries and country packs.
 
 ## Current status
 
-Local development foundation, built on the inherited ERPNext/Frappe 17 development
-baseline. ATLASERP branding covers sign-in, the launcher, navigation, website
-identity and email footer text. Existing ERP workflows power the operational
-screens. Moroccan localization, a redesigned checkout and ATLASUSE CRM integration
-are upcoming milestones, not completed features.
+The live evaluation build includes ATLASERP, ATLAS HR (HRMS) and ATLAS CRM, on the
+inherited ERPNext/Frappe 17 development baseline. The workspace exposes 21 business
+tool categories according to user permissions. Branding, company/branch/team setup,
+the customer portal and Street Pizza demo catalog are delivered. Existing ERP
+workflows power checkout and accounting. Moroccan localization/payroll configuration,
+native mobile checkout and ATLASUSE CRM synchronization remain upcoming milestones.
+
+Open [the live workspace](https://erp.atlasuse.site/atlas) or
+[the application launcher](https://erp.atlasuse.site/desk).
 
 ## Start locally
 

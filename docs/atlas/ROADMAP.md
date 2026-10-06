@@ -27,7 +27,7 @@ This is planned work; the current deployed checkout still uses native ERP screen
 | Projects / services | Projects, tasks, time and service invoicing | Service industry pack | P6 |
 | Manufacturing | BOMs, planning, work orders, subcontracting | Industry-specific setup and guided workflows | P6 |
 | Assets / maintenance | Fixed assets, depreciation, maintenance | Industry navigation and local accounting validation | P6 |
-| HR / payroll | Evaluate separate compatible Frappe HR app | Country-validated HR/payroll pack | P6, separate release |
+| HR / payroll | Frappe HRMS installed as ATLAS HR in 0.4.0 | Country-validated HR/payroll pack and employee setup | Engine available; country pack remains P6 |
 | Commerce / support | Evaluate available compatible apps | Store/portal/support integrations | P6, demand-led |
 | African markets | Multi-currency, country records | Independent packs for named countries | P7 |
 | Operations / hosting | Frappe sites, migrations, backups | Tenant onboarding, subscriptions, support operations | Release gate |

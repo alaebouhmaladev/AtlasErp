@@ -4,38 +4,57 @@
 
 - Public site: `https://erp.atlasuse.site`.
 - Server: Debian 12 at `85.190.254.196`; deployment uses the existing `alaebhm`
-  SSH account and its Docker access.
+  SSH account and Docker access.
 - Checkout: `/home/alaebhm/atlaserp/source`, GitHub `origin/dev`.
-- Compose configuration includes corrections through commit `f0e6da6b81`.
-- App image: `atlaserp:65233c3cf3`, POS repair from source commit `65233c3cf3`.
-- Frontend image: `atlaserp-frontend:65233c3cf3`.
+- Release source: `cbc6600c94`; subsequent deployment notes are documentation only.
+- App image: `atlaserp:cbc6600c94`.
+- Frontend image: `atlaserp-frontend:cbc6600c94`.
 - Frappe source: `459a849fa6e97510d00f260022419bfd03ca75d4`.
-- Engine/extension versions: ERPNext 17 development / ATLASERP 0.3.0.
+- Engine/extension: ERPNext 17 development / ATLASERP 0.4.0.
+- Installed packages: Frappe, ERPNext, ATLAS extension, HRMS, WhatsApp and CRM.
 - Application image identity:
-  `sha256:d0fbd186e568561aeb2062b869c94029c54838b55a332946cfa0286fb210474f`.
+  `sha256:6a35e706afda37ebbd90bda1aece700a08bb70d2ba6e5719ad9c9bf5beeedb6e`.
 - Frontend image identity:
-  `sha256:be1d9e77908d63fdef4e66d71c4026d9b349472049a4d513f7077987184e701c`.
+  `sha256:7809002cc6aa08dd4ef433062d93817646a604508ab657a704a209d6e9762d88`.
 
-This POS repair uses the verified UI release `atlaserp:7b4413e77e` and frontend
-`atlaserp-frontend:7b4413e77e` as build parents. No schema migration was needed.
-A full server-side backup was taken before rollout:
-`20261006_210505-erp_atlasuse_site-*`. The previous environment is saved privately
-as `.env.before-pos-65233c3cf3` in the server checkout.
+HRMS and CRM were installed and migrated on isolated staging before the live
+schema installation. Versions, app routes and results are in
+[APPLICATIONS.md](APPLICATIONS.md). All active backend, worker, scheduler and
+websocket services use the same application image.
 
-The native POS now initializes new invoices with the company/profile from the
-open cashier session before refreshing the form. Server-side profile defaults
-also resolve the company before cash/change account lookup. This fixes startup
-when the user's default company is ATLAS BITES and the session belongs to Street
-Pizza (Demo), while keeping `Street Pizza Demo Cash` mapped only to `Cash - SPD`.
+A full backup was taken after pausing traffic and background jobs immediately
+before installation: `20261006_223215-erp_atlasuse_site-*`. The original environment
+is saved privately as `.env.before-app-suite-7488df70fe`. The previous image pair
+is `atlaserp:65233c3cf3` / `atlaserp-frontend:65233c3cf3`. App installation changes
+schemas and installed-app records: rollback requires the matching pre-install
+site database/files/config backup, old asset manifests and original environment;
+reverting only images is insufficient. A restore drill remains pending.
 
-Build the app with `deploy/Dockerfile.pos-release` and its matching frontend with
-`deploy/Dockerfile.frontend-pos-release`. After starting both images, run
-`env/bin/python apps/erpnext/scripts/publish-pos-assets.py` from the backend bench
-directory, then `bench --site erp.atlasuse.site clear-cache`. The helper backs up
-the persistent asset manifest and updates only the POS bundle hash. It is safe
-to rerun. For rollback, restore the private previous environment and
-`sites/assets/assets.json.before-pos-repair`, restart the previous image pair
-and clear the site cache.
+Build optional apps with `deploy/Dockerfile.app-suite` and matching assets with
+`deploy/Dockerfile.frontend`; use `deploy/compose.app-suite.yaml` for installation
+in HRMS, WhatsApp, CRM dependency order. The current frontend inherits the full
+suite asset image and applies `deploy/Dockerfile.frontend-config` to update only
+proxy configuration. Run `env/bin/python
+apps/erpnext/scripts/publish-app-suite-assets.py` from the backend bench to publish
+optional LTR/RTL bundle keys, then clear the site cache. It preserves ERP/POS
+entries and backs up both manifests with `.before-app-suite` suffixes.
+
+The native POS company/account repair from `65233c3cf3` remains in this release.
+Invoices initialize with the session profile's company before form refresh;
+cash/change/receivable accounts resolve against that company. Street Pizza Demo
+Cash remains mapped to Cash - SPD. Read-only regressions pass for both invoice
+types; all company, menu, profile and transaction counts match the rollout
+snapshot. No live invoices, openings, closings or ledger entries were posted by
+this application installation.
+
+Realtime authentication calls the internal `backend:8000` service with the site
+header. The proxy preserves supplied Origin headers and fills an absent one only
+when `Sec-Fetch-Site` says `same-origin`. This browser-generated metadata is
+[documented by MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Sec-Fetch-Site).
+Authenticated WebSocket and polling namespace checks pass through the public
+HTTPS domain; foreign origins and absent cross-site origins are rejected.
+The verifier is `scripts/check-realtime.mjs`, run from a runtime bench with a
+private JSON file containing an existing session cookie. Do not commit that file.
 
 The GitHub repository is readable over HTTPS without a token. No GitHub account
 credentials or private deploy keys are needed for the server to pull this public
@@ -54,7 +73,8 @@ the application containers run immutable images rather than mounted source.
 - Database branding and launcher metadata checks pass.
 - Guest, Website User and Sales User access checks pass; temporary users are
   rolled back and caches cleared.
-- Socket.IO polling handshake and websocket upgrade succeed through CloudPanel.
+- Authenticated Socket.IO polling and WebSocket namespaces succeed through CloudPanel;
+  foreign-origin requests are rejected. Live employee-list browser checks report no new errors.
 - `bench doctor` reports one online worker; worker logs show scheduled jobs
   completing successfully.
 - Business setup page and assets work through public HTTPS; guest access is
@@ -94,7 +114,8 @@ dedicated warehouses and scoped business-structure roles are delivered; account
 activation uses administrator User management. POS profile and retail transaction
 posting was tested on the isolated site (invoice, change, balanced GL and no
 stock movement for menu services), with transactions rolled back. The shared
-interface, customer portal and read-only restaurant menu are delivered. Online
+interface, customer portal, read-only restaurant menu and HR/CRM applications are delivered.
+Moroccan payroll rules, employee configuration and ATLASUSE data synchronization remain pending. Online
 ordering, kitchen/table workflows, Moroccan accounting certification, custom
 checkout, payment-provider integration and ATLASUSE synchronization remain pending. Follow [VPS operations](VPS.md) for updates
 and backups, and the [roadmap](ROADMAP.md) for product work.

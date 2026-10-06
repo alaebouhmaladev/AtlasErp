@@ -1,6 +1,6 @@
 # Small development backlog
 
-Status: **Business setup, shared theme, customer entry pages and demo catalog deployed (ATLASERP 0.3.0)**.
+Status: **Business setup, shared theme, customer entry pages, demo catalog and HR/CRM applications deployed (ATLASERP 0.4.0)**.
 The company/brand/branch/team implementation is documented in `ONBOARDING.md`.
 The Street Pizza development dataset includes 63 items and a configured cash POS
 profile. Guided general catalog/POS setup and the custom transaction workflow
@@ -27,6 +27,7 @@ The shared posting and restaurant delivery slices remain in `POS_WORKFLOW.md`.
 | F04 | Role-aware retail launchpad | Guest redirects; website user denied; responsive navigation reflects roles | Access/HTTP/desktop/phone checks passed; operational destinations await shop setup |
 | F05 | Stable baseline assessment | Recorded supported pair, pinned versions and compatibility results | Before real pilot data |
 | F06 | ATLASERP product branding | Sign-in/launcher/logos/settings/credits branded; authentication and roles preserved | Implemented; verification recorded in BRANDING.md |
+| F07 | Compatible HRMS/CRM application suite | Pinned apps installed on staging/live, permitted launchers and routes work, POS/data preserved | Done: ATLAS HR/CRM, 21 tool categories and realtime verified in APPLICATIONS.md; country payroll and CRM synchronization remain separate |
 
 ## P1 — Shop setup, one piece at a time
 
