@@ -4,4 +4,5 @@ RUN mkdir /tmp/atlas-assets && cp -aL sites/assets/. /tmp/atlas-assets/
 
 FROM nginx:1.28-alpine
 COPY --from=assets /tmp/atlas-assets /srv/assets
+RUN chmod -R a+rX /srv/assets
 COPY deploy/nginx.conf /etc/nginx/templates/default.conf.template
