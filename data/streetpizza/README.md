@@ -75,3 +75,21 @@ did not add duplicate records. One Margherita (69 MAD) and one Coca Cola (15 MAD
 produced a demo total of 84 MAD, tender 100 MAD and change 16 MAD, with zero
 outstanding balance, balanced GL entries, no stock ledger posting and a correctly
 labelled demo receipt. The test opening, sale and GL entries were rolled back.
+
+## Approved live demo import
+
+The user explicitly approved the live demo import on 2026-10-06. The same
+master data is now saved at `erp.atlasuse.site`; ATLAS BITES remains separate.
+Live native POS catalog verification returned all 63 exact names/prices and
+required-choice metadata. No Street Pizza Sales Invoice, POS Invoice, POS Opening
+Entry or GL Entry was created. The existing site timezone is Africa/Casablanca.
+The demo POS profile links the published company address and remains assigned
+only to Administrator. Its till must be opened explicitly before checkout use.
+
+Public application routes:
+- Company: `/desk/company/Street%20Pizza%20%28Demo%29`
+- POS profile: `/desk/pos-profile/Street%20Pizza%20-%20Maarif%20-%20Demo%20POS`
+- POS: `/desk/selling/point-of-sale`
+
+Before real operations, replace the demo configuration with verified legal company
+identity, approved tax treatment and receipts, actual cash/stock and staff setup.

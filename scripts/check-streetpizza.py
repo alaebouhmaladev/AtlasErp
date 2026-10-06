@@ -36,6 +36,7 @@ def main():
         print("PASS: 63 exact item names/prices, 9 categories, required combo choices and repeat-import safety")
         profile = frappe.get_doc("POS Profile", PROFILE)
         assert profile.company == COMPANY and profile.applicable_for_users[0].user == "Administrator"
+        assert profile.company_address
         opening = create_opening_voucher(PROFILE, COMPANY, [{"mode_of_payment": profile.payments[0].mode_of_payment, "opening_amount": 0}])
         invoice = frappe.get_doc({
             "doctype": "Sales Invoice", "company": COMPANY, "customer": profile.customer,

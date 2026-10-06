@@ -92,11 +92,13 @@ def seed(menu):
     branch = save_branch(COMPANY, brand, "Casablanca Maarif", BRANCH_CODE,
                          city=business["city"], address=business["address"])["name"]
     warehouse = frappe.db.get_value("Atlas Business Branch", branch, "warehouse")
-    ensure("Address", {"address_title": COMPANY, "address_type": "Billing"}, {
+    address, _ = ensure("Address", {"address_title": COMPANY, "address_type": "Billing"}, {
         "address_title": COMPANY, "address_type": "Billing", "address_line1": business["address"],
         "city": "Casablanca", "country": "Morocco", "phone": business["phone"], "is_primary_address": 1,
         "links": [{"link_doctype": "Company", "link_name": COMPANY}],
     })
+    if not any(row.link_doctype == "Company" and row.link_name == COMPANY for row in address.links):
+        frappe.throw("The existing demo address is linked to another business.")
     ensure("Item Group", {"name": ROOT_GROUP}, {
         "item_group_name": ROOT_GROUP, "parent_item_group": "All Item Groups", "is_group": 1,
     })
@@ -166,6 +168,7 @@ def seed(menu):
     })
     profile, created = ensure("POS Profile", {"name": PROFILE}, {
         "name": PROFILE, "company": COMPANY, "customer": customer.name, "warehouse": warehouse,
+        "company_address": address.name,
         "currency": "MAD", "selling_price_list": PRICE_LIST, "disabled": 0,
         "income_account": company.default_income_account, "expense_account": company.default_expense_account,
         "cost_center": company.cost_center, "write_off_account": company.default_expense_account,
@@ -180,6 +183,9 @@ def seed(menu):
     })
     if profile.company != COMPANY or profile.warehouse != warehouse or profile.selling_price_list != PRICE_LIST:
         frappe.throw("Existing demo POS Profile has conflicting business references.")
+    if not profile.company_address:
+        profile.company_address = address.name
+        profile.save()
     return {"company": COMPANY, "brand": brand, "branch": branch, "warehouse": warehouse,
             "pos_profile": profile.name, "profile_created": created, "items": 63,
             "categories": len(category_groups), "price_list": PRICE_LIST, "mode": "demo"}
