@@ -15,7 +15,7 @@ This is planned work; the current deployed checkout still uses native ERP screen
 | --- | --- | --- | --- |
 | Foundation | Users, roles, company, warehouses, APIs | Branding, onboarding, navigation, operator roles | P0–P1 |
 | Retail / POS | POS profiles, invoices, sessions and closing | Android tablet checkout, device/scanner/printer support, offline synchronization, iOS later | P2 / mobile phases 0–2, 6 |
-| Restaurant | Catalog, customers, invoicing and stock engine | Meal choices, tables, waiters, kitchen workflow, split bills, ingredient/recipe stock | Mobile phases 1, 3–4 |
+| Restaurant | Catalog, customers, invoicing and stock engine | Same-router devices/local hub, configurable printers, meal choices, tables, waiters, kitchen workflow, split bills, ingredient/recipe stock | Mobile phases 1, 3–4 / LAN-01–LAN-07 |
 | Catalog | Items, UOM, variants, barcodes, prices | Fast retail entry, validated import, product search | P1 |
 | Inventory | Warehouses, receipts, counts, transfers, batches | Branch workflows, low-stock actions, expiry views | P3 |
 | Sales | Quotes, orders, deliveries, invoices, credits | Simplified screens and document templates | P2 / P5 |

@@ -3,9 +3,11 @@
 Prepared 2026-10-06. This is a product and implementation plan, not a released
 mobile application. Android tablets are the first delivery target; iPad/iPhone
 follow after the Android restaurant workflow is proven. The user confirmed that
-**offline cash sales are essential** and selected **Epson** for printing. The
-tablet below is our recommended pilot device; the exact existing Epson model,
-purchase availability and physical compatibility checks remain to be confirmed.
+**offline cash sales are essential** and wants tablets, screens, printers and
+other supported devices connected through **the same shop Wi-Fi router**.
+Printing must be configurable rather than tied to one printer model. Epson is
+the initial preference, not an exclusive requirement. Hardware suggestions below
+are optional; exact interfaces and physical compatibility remain to be tested.
 
 ## Product direction
 
@@ -45,9 +47,15 @@ hardware behavior or restaurant workflows.
 
 ```mermaid
 flowchart LR
-  Tablet[Android tablet: ATLAS POS] --> API[Authenticated ATLAS POS API]
-  Tablet --> Local[Local catalog, cart and durable sale outbox]
-  Tablet --> Printer[Supported receipt printer and scanner]
+  subgraph Shop[Same shop router: local Wi-Fi and LAN]
+    Tablet[Android tablet: ATLAS POS] <--> Hub[ATLAS shop hub: shared orders and device routing]
+    Waiter[Waiter tablet] <--> Hub
+    Kitchen[Kitchen screen] <--> Hub
+    Display[Customer screen] <--> Hub
+    Hub --> Printer[Configured receipt and kitchen printers]
+    Tablet --> Local[Local catalog, cart and durable sale outbox]
+  end
+  Hub <--> API[Authenticated ATLAS POS API and cloud sync]
   API --> ERP[ERPNext document validation and posting]
   ERP --> Office[ATLASERP owner backoffice]
   API --> Restaurant[Restaurant orders and kitchen tickets]
@@ -58,6 +66,7 @@ flowchart LR
 | --- | --- |
 | Planned `mobile/atlas_pos/` | Flutter screens, application state, API client, local database, hardware adapters |
 | Planned `apps/atlas_erp/atlas_erp/pos_api/` | Versioned POS operations, authorization, request deduplication and register context |
+| Planned shop hub | Branch-local shared order authority, paired device registry, durable kitchen/print routing and cloud synchronization; deployment/runtime chosen in a tested prototype |
 | Existing ERPNext | Financial and stock document lifecycle; no direct ledger writes from the app |
 | Restaurant extension | Unpaid orders, tables, modifiers, kitchen tickets and settlement links |
 | Existing ATLASERP web backoffice | Company/brand/branch, products, prices, purchasing and management workflows |
@@ -82,7 +91,7 @@ Audit generic ERP APIs and existing whitelisted POS helpers as well as new APIs.
 | 0 — Register readiness | Company, cashier assignment, price list, warehouse and payment mappings checked before opening; resume own shift or explain another cashier's open shift | A restricted cashier opens the correct register without developer help; wrong scope and concurrent opening are rejected |
 | 1 — Android counter POS | Sign-in/enrollment, menu/categories/search, cart, validated modifiers, cash payment/change, receipt, return and cash closing | Open → sell → print → return → close reconciles with ERPNext on the selected tablet/printer |
 | 2 — Offline cash | Cached approved catalog, durable local cash sales, recovery and visible synchronization queue | Network loss, app restart, server timeout and repeated replay lose no sales and create no duplicate invoice |
-| 3 — Restaurant service | Tables, takeaway/delivery orders, waiter orders, kitchen routing/display, statuses, table transfer and split settlement | Concurrent waiter edits, kitchen retries and settlement retries preserve orders and produce the correct invoice(s) |
+| 3 — Connected restaurant service | Paired devices on one router, local shop hub, tables, takeaway/delivery orders, waiter orders, kitchen routing/display, statuses, table transfer and split settlement | With WAN disconnected, waiter → till → kitchen updates agree; concurrent edits, kitchen retries and settlement retries preserve orders and produce the correct invoice(s) after sync |
 | 4 — Owner operations | Brands/branches, ingredient recipes and wastage, buying, counts, transfers, staff controls, reports, loyalty and promotions | Branch reports match posted records; ingredients and purchasing reconcile; operator permissions tested through APIs |
 | 5 — Customer channels and payments | QR menu/order flow, delivery dispatch, online storefront and country/provider payment integrations | Orders reach the right branch; payment callbacks are authenticated, deduplicated and reconciled |
 | 6 — iOS and expansion | iPad POS, iPhone waiter/owner layouts, onboarding/billing/support and country packs | Real iOS hardware checks and store release requirements pass; each country pack has its own pilot and local review |
@@ -92,6 +101,8 @@ the first commercial pilot**, following the user's offline cash requirement.
 Phase 1 includes basic meal modifiers; full table/kitchen operations follow in
 phase 3. Card/transfer recording and actual electronic payment processing are
 separate capabilities.
+For a restaurant pilot using shared waiter/kitchen screens, phase 3's local
+coordination and outage checks are also required before commercial use.
 
 ## Small tasks, in order
 
@@ -104,11 +115,12 @@ separate capabilities.
 | MOB-05 | Session resume/open flow | Own session resumes; another cashier's session explains the block; one profile per register; duplicate opening requests return the same result |
 | MOB-06 | Touch catalog, search and cart | Large touch targets, quantities and required modifier limits; interrupted cart survives restart; scanner focus demonstrated |
 | MOB-07 | Server quotation and idempotent cash sale | Server validates prices/taxes/discount authority; double tap, timeout and retry produce one submitted invoice with correct change |
-| MOB-08 | Hardware receipt adapter | Correct totals and sale identity print on the agreed printer; failure does not repost a sale; uncertain delivery/reprints are explicit |
+| MOB-08 | Configurable network receipt adapters | Owner pairs a supported printer by connection/protocol and assigns its role; correct totals print; failure does not repost a sale; uncertain delivery/reprints are explicit |
 | MOB-09 | Return and closing | Authorized original-sale refunds and counted cash variance reconcile; no silent cancellation of another cashier's shift |
 | MOB-10 | Offline outbox and synchronization | Local sale plus outbox written atomically; duplicate replay, crash recovery, stale catalog and rejected records tested |
 | MOB-11 | Android pilot hardening | Real-device lifecycle, backup/restore, tenant isolation, app upgrade and support diagnostics pass |
-| REST-01 onward | Unpaid table orders → kitchen → shared settlement | Continue the small tasks in POS_WORKFLOW.md, then add transfer/split-bill cases |
+| LAN-01–LAN-07 | Shared-router device coordination | Complete the local-network tasks below before claiming offline shared restaurant operation |
+| REST-01 onward | Unpaid table orders → kitchen → shared settlement | Build on the local hub and continue POS_WORKFLOW.md, then add transfer/split-bill cases |
 
 The immediate next implementation slice is **MOB-01/MOB-02**, then authenticated
 catalog loading. Do not describe a cart mockup or unconnected APK as a working POS.
@@ -157,10 +169,80 @@ local accountant review. An unsynchronized local sale must remain distinguishabl
 from a server-posted invoice. Offline cash acceptance does not prove offline card
 or mobile-money processing: those depend on the provider and certified terminal.
 
-Initial offline support is for one till and its local printing. Multi-tablet
-waiter/kitchen collaboration during an internet outage needs a separately tested
-local-network authority or shop hub; isolated tablets cannot promise coherent
-shared table orders. Do not present those two offline capabilities as equivalent.
+Initial offline support is for one till and its local printing. The shared
+restaurant target adds a tested shop hub to coordinate waiter/till/kitchen
+devices on the same router during internet outages. Connecting to the router
+provides network reachability; the hub and applications provide shared state.
+Standalone offline cash and offline shared restaurant operation have separate
+acceptance checks, and both required scopes must pass for the intended pilot.
+
+## Shared-router device design
+
+Each branch has its own paired device registry and routing rules. Devices join
+the shop network through Wi-Fi, or Ethernet to the same router where appropriate.
+The router remains the network connection; a separately running ATLAS shop hub
+coordinates devices. Do not assume a normal router can host the application.
+Select the hub host/runtime after prototyping unattended startup, storage and
+power recovery; possible hosts include a dedicated small computer or a validated
+always-on Android host. This architecture is planned, not currently deployed.
+
+The owner-facing flow is **Devices → Add device → Pair → Choose role → Test**.
+Use names such as "Counter receipt", "Kitchen pizza" and "Customer display",
+with connection status and a clear retry action. Network discovery is optional;
+allow QR/manual pairing and address entry for devices that do not advertise
+themselves. Use stable device identities and reserve addresses where needed.
+Sharing Wi-Fi is not authorization: approve pairing and enforce branch, device
+and operator permissions on local and cloud operations.
+
+| Device role | Planned behavior |
+| --- | --- |
+| Cashier tablet | Catalog/cart, cash checkout, own till/session, receipts and visible sync status |
+| Waiter tablet/phone | Permitted tables/orders and send-to-kitchen; tender/refund actions require cashier/manager permission |
+| Kitchen screen | Queue by preparation station, new additions, acknowledged/ready status and reconnect recovery |
+| Customer display | Only the assigned till's permitted cart/total/order status; no management or other customer data |
+| Receipt printer | Configured destination for an assigned till; supported network protocol/vendor adapter and tested paper/characters |
+| Kitchen printer | Category/station routing, durable ticket identity, job status and explicit reprint handling |
+| Scanner/drawer/other peripheral | Supported interface and adapter; USB-only devices attach through a compatible host/bridge and do not join Wi-Fi by themselves |
+
+Keep receipt content and kitchen ticket data independent of the printer adapter.
+Persist model, transport, address, capabilities and routing in configuration;
+do not hardcode one brand/model/address into checkout. Epson adapters can be the
+first supported family. Add other protocols/models through a published tested
+compatibility list; being connected to the router alone does not establish a
+device's printing or display protocol. Network-only discovery must not silently
+register every device or expose the printer/hub on the public internet.
+
+The local hub serializes shared order changes, stores accepted commands and
+routes kitchen/display/print updates. Assign command identities and order
+revisions; reject conflicting edits visibly instead of overwriting a paid or
+changed table. A screen reconnects from the last acknowledged revision. Outgoing
+cloud events remain durable and deduplicated; cloud ERPNext still validates and
+posts financial/stock documents. Settle an order only once across local and
+cloud retry paths. Keep internal kitchen commands separate from invoice posting.
+
+If the WAN fails but the LAN/hub remains available, the intended restaurant
+workflow continues locally and shows pending cloud synchronization. If the hub
+or LAN fails, shared table changes cannot be confirmed: show the outage and
+retain queued work. Permit only a tested isolated-till cash fallback under the
+offline policy, block conflicting shared settlements, and reconcile before
+resuming shared work. Do not automatically create a second order authority.
+
+### Small local-network tasks
+
+| ID | Deliverable | Acceptance |
+| --- | --- | --- |
+| LAN-01 | Hub topology and runtime prototype | A named host starts unattended and recovers its durable state after restart; no router-hosting assumption |
+| LAN-02 | Pairing and device registry | Owner adds/revokes named devices by branch; unpaired/wrong-branch operations are rejected; QR/manual fallback works |
+| LAN-03 | Configurable device adapters and routing | Two supported printer configurations use the same receipt API; station/till routing and test jobs reach only the assigned destination |
+| LAN-04 | Shared order command log | Concurrent edits, retries and hub restart preserve order revisions and prevent duplicate settlement |
+| LAN-05 | Kitchen/customer screen clients | Correct station/till scope, restricted display data, acknowledged updates and reconnect replay demonstrated |
+| LAN-06 | WAN-outage synchronization | Waiter → till → kitchen works with internet disconnected; restoring internet posts each accepted cash sale once |
+| LAN-07 | Local failure and restore | Hub/LAN loss clearly blocks unconfirmed shared actions; queued events, fallback reconciliation and backup/restore tested |
+
+Exercise at least two POS/waiter clients, one kitchen screen and a supported
+network printer on the same router. Test WAN unplugged separately from Wi-Fi
+loss, hub failure and power loss. Declare supported capacity only after measuring
+the actual host/network/device combination; do not promise unlimited devices.
 
 ## Restaurant and hardware requirements
 
@@ -182,42 +264,42 @@ the receipt already printed; display that uncertainty and label reprints rather
 than guaranteeing one physical print. Tablet sleep/restart, cable loss, printer
 paper-out and app updates must be part of hardware testing.
 
-### Recommended premium pilot kit
+### Optional pilot hardware reference
 
-This recommendation prioritizes daily restaurant use and support life. It is a
-candidate for our first supported configuration, not an already certified pair.
+The tablet suggestion prioritizes daily restaurant use and support life. It is
+an optional pilot choice. Printing and screen routing use configurable devices;
+the product does not require a fixed printer model or an already certified pair.
 
 | Part | Proposed choice | Reason and purchase check |
 | --- | --- | --- |
 | Android tablet | Samsung Galaxy Tab Active5 Pro, 10.1-inch; Moroccan 6 GB / 128 GB model SM-X356BZGAMWD | IP68, replaceable batteries and security support listed through 31 May 2033; get a local warranty/service quote |
-| Receipt printer | Epson TM-m30III, 80 mm paper, Ethernet-equipped regional SKU | Local network printing and drawer connector; confirm exact model/interfaces and included power supply |
+| Receipt printer | Owner-selected supported Wi-Fi/LAN printer; Epson is the initial adapter preference | Confirm protocol, model/interfaces, paper width and power supply; run a test receipt before assigning the till |
 | Counter mount and power | Secure tablet stand, dedicated Samsung-compatible charger or approved dock | Validate continuous charging, thermal behavior and secure cable routing |
-| Shop network | Local Wi-Fi access point/router plus Ethernet to the printer | Keep tablet and printer reachable without the internet; turn off client isolation on the intended POS network and reserve the printer address |
+| Shop network and hub | One shop router for tablets/screens/network printers, plus a tested local hub host | Keep permitted POS devices reachable without the internet; configure the intended POS network and device addresses |
 | Cash drawer | Drawer explicitly compatible with the printer's kick connector | Check electrical requirements and connector; a matching-looking plug alone is insufficient |
 
-Manufacturer references: [Samsung Morocco tablet specifications](https://www.samsung.com/n_africa/business/tablets/galaxy-tab-active/galaxy-tab-active5-pro-sm-x356bzgamwd/),
+Optional hardware references: [Samsung Morocco tablet specifications](https://www.samsung.com/n_africa/business/tablets/galaxy-tab-active/galaxy-tab-active5-pro-sm-x356bzgamwd/),
 [Epson printer specifications](https://download4.epson.biz/sec_pubs/bs/html/m001464/en/chap07_1.html)
 and [Epson connectors](https://download4.epson.biz/sec_pubs/bs/html/m001464/en/chap02_3.html).
 Prices, local stock and warranty terms have not been verified; request a Moroccan
 supplier quote before purchasing. Buy/test one pilot kit before ordering a fleet.
 
-Use the Epson ePOS SDK through a native Android adapter and keep Flutter receipt
-formatting separate from transport. Pin a tested SDK/firmware combination after
-model confirmation. [Epson's TM-m30III software list](https://support.epson.net/setupnavi/index.php?LG2=EN&MKN=TM-m30III&OSC=ARD&PINF=swlist)
+For compatible Epson models, evaluate the ePOS SDK behind the common network
+printer interface; other supported families receive their own adapters. Pin a
+tested SDK/firmware combination after model confirmation. [Epson's TM-m30III software list](https://support.epson.net/setupnavi/index.php?LG2=EN&MKN=TM-m30III&OSC=ARD&PINF=swlist)
 lists the Android SDK; [Epson's SDK documentation](https://download4.epson.biz/sec_pubs/pos/reference_en/technology/epson_epos_sdk.html)
 describes Android/iOS interfaces and model-dependent transports.
 
-Use separate tablet power for this kit. Epson lists printer USB-PD output up to
-18 W (9 V / 2 A); Samsung specifies at least 9 V / 2.3 A with PD 2.0 for its
-No Battery Mode. Their specifications do not establish adequate printer power
-for that mode. This is an inference from the linked specifications, not a
-physical compatibility result. Normal battery operation and charging still need
-testing. No Battery Mode also has performance/display limits.
+Device power is independent of network transport. Validate each tablet, screen,
+hub and printer with its appropriate charger/power supply. The product must not
+depend on a particular printer charging the tablet. For the optional Samsung
+tablet, verify charging and any No Battery Mode requirements against its manual
+and test the actual mount/charger combination.
 
 An internet outage and a power outage are separate cases. Local cash checkout and
 LAN printing must work with the WAN disconnected while local equipment is powered.
 If the shop requires printing during a power cut, size and test a UPS for the
-printer and network; running the tablet on its battery alone cannot power them.
+printer, hub and network; running the tablet on its battery alone cannot power them.
 No Battery Mode depends on continuous external power.
 
 Hardware acceptance on the named kit: all-day charging/temperature test; WAN

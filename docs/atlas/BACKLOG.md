@@ -9,9 +9,12 @@ First vertical: retail and POS. Each ID is a bounded, independently reviewable t
 
 Next product direction: Android tablet POS for retail/counter sales and restaurant
 service, then iOS. Offline cash is required before the first commercial pilot;
-Epson is the chosen printer family. Begin with register readiness and the
-app/toolchain foundation, keeping durable local storage in the initial design.
-Mobile phases and MOB-01–MOB-11 are recorded in [MOBILE_POS.md](MOBILE_POS.md).
+Use the same shop router for supported tablets/screens/printers, with configurable
+printer adapters and a local hub for shared offline restaurant operation. Epson
+is the initial preference, not a required printer model. Begin with register
+readiness and the app/toolchain foundation, keeping durable local storage in
+the initial design.
+Mobile phases, MOB-01–MOB-11 and LAN-01–LAN-07 are recorded in [MOBILE_POS.md](MOBILE_POS.md).
 The shared posting and restaurant delivery slices remain in `POS_WORKFLOW.md`.
 
 ## Foundation tickets

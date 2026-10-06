@@ -51,6 +51,12 @@ permission, stock and reconciliation policies are a first commercial pilot gate.
 [MOBILE_POS.md](MOBILE_POS.md); offline cash and offline multi-device restaurant
 collaboration are separate acceptance scopes.
 
+Device setup uses Devices → Add device → Pair → Choose role → Test. Owners name
+supported tablets, kitchen/customer screens and printers on the same shop router,
+assign destinations and see connection status. Printer adapters are configurable.
+A local hub coordinates shared restaurant orders; WAN loss, local-network loss
+and hub failure each need an explicit state and safe recovery behavior.
+
 ## Usability review
 
 Observe cashiers completing scan → payment → receipt and managers doing a return,

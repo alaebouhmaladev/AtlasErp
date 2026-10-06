@@ -23,6 +23,9 @@ ATLASUSE CRM ↔ future authenticated integration adapter ↔ ATLASERP
 
 Planned native POS adds a Flutter Android/iOS client, local catalog/cart/outbox,
 hardware adapters and versioned authenticated POS operations in `atlas_erp`.
+Tablets, kitchen/customer screens and supported network printers connect through
+the same shop router. A planned local hub coordinates shared orders and device
+routing during WAN outages; printer models/transports are configurable adapters.
 ERPNext retains financial posting authority. See [MOBILE_POS.md](MOBILE_POS.md)
 for the Android-first decision, offline boundaries and hardware acceptance gates.
 
