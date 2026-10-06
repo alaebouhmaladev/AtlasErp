@@ -1,15 +1,21 @@
 # Product roadmap
 
 The long-term system can serve many industries. The first complete product serves
-**Moroccan retail shops**, then extends through tested industry and country packs.
+**Moroccan retail shops and restaurants**, with Android tablets as the first native
+POS target and iOS following later. It extends through tested industry and country packs.
 No calendar deadline is assumed; phases advance when their exit criteria pass.
+
+The Android/iOS delivery phases, restaurant scope, required offline cash, pilot hardware
+and small implementation slices are recorded in [MOBILE_POS.md](MOBILE_POS.md).
+This is planned work; the current deployed checkout still uses native ERP screens.
 
 ## Complete capability map
 
 | Area | ERPNext reuse | ATLASERP work | Delivery |
 | --- | --- | --- | --- |
 | Foundation | Users, roles, company, warehouses, APIs | Branding, onboarding, navigation, operator roles | P0–P1 |
-| Retail / POS | POS profiles, invoices, sessions and closing | Touch-friendly checkout, scanning, receipts, return guidance | P2 |
+| Retail / POS | POS profiles, invoices, sessions and closing | Android tablet checkout, device/scanner/printer support, offline synchronization, iOS later | P2 / mobile phases 0–2, 6 |
+| Restaurant | Catalog, customers, invoicing and stock engine | Meal choices, tables, waiters, kitchen workflow, split bills, ingredient/recipe stock | Mobile phases 1, 3–4 |
 | Catalog | Items, UOM, variants, barcodes, prices | Fast retail entry, validated import, product search | P1 |
 | Inventory | Warehouses, receipts, counts, transfers, batches | Branch workflows, low-stock actions, expiry views | P3 |
 | Sales | Quotes, orders, deliveries, invoices, credits | Simplified screens and document templates | P2 / P5 |

@@ -1,12 +1,18 @@
 # Small development backlog
 
-Status: **Business setup milestone deployed and verified on VPS (ATLASERP 0.2.0)**.
+Status: **Business setup, shared theme, customer entry pages and demo catalog deployed (ATLASERP 0.3.0)**.
 The company/brand/branch/team implementation is documented in `ONBOARDING.md`.
-Catalog, POS profiles and transaction workflows remain future tickets.
+The Street Pizza development dataset includes 63 items and a configured cash POS
+profile. Guided general catalog/POS setup and the custom transaction workflow
+remain future tickets; demo master data does not complete those product gates.
 First vertical: retail and POS. Each ID is a bounded, independently reviewable task.
 
-Next active milestone: shared counter/takeaway and restaurant table checkout.
-Source inspection and delivery slices are recorded in `POS_WORKFLOW.md`.
+Next product direction: Android tablet POS for retail/counter sales and restaurant
+service, then iOS. Offline cash is required before the first commercial pilot;
+Epson is the chosen printer family. Begin with register readiness and the
+app/toolchain foundation, keeping durable local storage in the initial design.
+Mobile phases and MOB-01–MOB-11 are recorded in [MOBILE_POS.md](MOBILE_POS.md).
+The shared posting and restaurant delivery slices remain in `POS_WORKFLOW.md`.
 
 ## Foundation tickets
 

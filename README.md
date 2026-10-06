@@ -5,8 +5,9 @@
 </div>
 
 ATLASERP brings retail checkout, products, inventory, purchasing, payments and
-accounting into one workspace. Our first pilot focuses on Moroccan retail shops
-and point of sale; later releases add other industries and country packs.
+accounting into one workspace. Our first product scope focuses on Moroccan retail
+and restaurants, with an Android tablet POS planned before iOS; later releases
+add other industries and country packs.
 
 ## Current status
 
@@ -35,6 +36,7 @@ See [the setup guide](ATLASERP.md) for commands, prerequisites and development l
 
 - [Complete roadmap](docs/atlas/ROADMAP.md)
 - [Small development tickets](docs/atlas/BACKLOG.md)
+- [Android/iOS POS product plan and small delivery tasks](docs/atlas/MOBILE_POS.md)
 - [Architecture](docs/atlas/ARCHITECTURE.md)
 - [UI and UX direction](docs/atlas/UX.md)
 - [Country localization](docs/atlas/LOCALIZATION.md)

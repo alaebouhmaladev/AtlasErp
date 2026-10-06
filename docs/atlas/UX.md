@@ -44,9 +44,12 @@ near the relevant field. Hide prohibited actions and enforce them on the server.
 Use confirmations for consequential operations such as submit/cancel/return,
 while preserving the user's work on errors.
 
-Offline selling is not promised. Research intermittent connectivity, transaction
-replay, price/tax drift, conflict resolution and stock overselling before any
-offline pilot. First release is online with understandable connection failures.
+Offline selling is not delivered. The Android-first plan designs local persistence
+and synchronization from the outset; the first development checkout can be online.
+Offline cash is an explicit user requirement. Tested sale replay, price/tax drift,
+permission, stock and reconciliation policies are a first commercial pilot gate. See
+[MOBILE_POS.md](MOBILE_POS.md); offline cash and offline multi-device restaurant
+collaboration are separate acceptance scopes.
 
 ## Usability review
 

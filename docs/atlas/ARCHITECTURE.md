@@ -21,6 +21,11 @@ Browser / tablet
 ATLASUSE CRM ↔ future authenticated integration adapter ↔ ATLASERP
 ```
 
+Planned native POS adds a Flutter Android/iOS client, local catalog/cart/outbox,
+hardware adapters and versioned authenticated POS operations in `atlas_erp`.
+ERPNext retains financial posting authority. See [MOBILE_POS.md](MOBILE_POS.md)
+for the Android-first decision, offline boundaries and hardware acceptance gates.
+
 ## Repository boundaries
 
 | Location | Purpose |
