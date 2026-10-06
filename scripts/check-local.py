@@ -5,6 +5,7 @@ Passwords are read from the private .env and never printed.
 """
 
 import json
+import os
 from http.cookiejar import CookieJar
 from pathlib import Path
 from urllib.parse import urlencode
@@ -17,7 +18,7 @@ def main():
         if line.strip() and not line.startswith("#"):
             key, value = line.split("=", 1)
             config[key] = value
-    base = "http://localhost:" + config.get("ATLAS_HTTP_PORT", "8000")
+    base = os.environ.get("ATLAS_BASE_URL", "http://localhost:" + config.get("ATLAS_HTTP_PORT", "8000"))
     client = build_opener(HTTPCookieProcessor(CookieJar()))
     with client.open(base + "/atlas", timeout=30) as response:
         assert "/login" in response.url, "Guest was not redirected to login"
