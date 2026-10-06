@@ -1,0 +1,7 @@
+# POS engine repair on top of an existing ATLASERP release.
+ARG BASE_IMAGE=atlaserp:7b4413e77e
+FROM ${BASE_IMAGE}
+COPY --chown=frappe:frappe erpnext/selling/page/point_of_sale/pos_controller.js apps/erpnext/erpnext/selling/page/point_of_sale/pos_controller.js
+COPY --chown=frappe:frappe erpnext/accounts/doctype/sales_invoice/services/pos.py apps/erpnext/erpnext/accounts/doctype/sales_invoice/services/pos.py
+COPY --chown=frappe:frappe scripts apps/erpnext/scripts
+RUN bench build --apps erpnext && cp sites/assets/assets.json pos-assets.json

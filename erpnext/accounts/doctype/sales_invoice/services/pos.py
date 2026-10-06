@@ -22,14 +22,14 @@ class POSService:
 		if cint(doc.is_pos) != 1:
 			return None
 
-		self._set_default_change_amount_account()
-
 		if not self._ensure_pos_profile():
+			self._set_default_change_amount_account()
 			return None
 
 		pos = frappe.get_doc("POS Profile", doc.pos_profile) if doc.pos_profile else {}
 		if pos:
 			self._apply_pos_profile(pos, for_validate)
+		self._set_default_change_amount_account()
 
 		return pos
 
@@ -57,13 +57,13 @@ class POSService:
 
 	def _apply_pos_profile(self, pos, for_validate: bool) -> None:
 		doc = self.doc
+		# Resolve the profile's company before looking up its payment accounts.
+		self._copy_pos_profile_fields(pos, for_validate)
 		if not for_validate:
 			self._apply_editable_pos_defaults(pos)
 
 		if pos.get("account_for_change_amount"):
 			doc.account_for_change_amount = pos.get("account_for_change_amount")
-
-		self._copy_pos_profile_fields(pos, for_validate)
 
 		if pos.get("company_address"):
 			doc.company_address = pos.get("company_address")

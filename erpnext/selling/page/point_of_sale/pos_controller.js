@@ -592,6 +592,10 @@ erpnext.PointOfSale.Controller = class {
 		const page = $("<div>");
 		const frm = _frm || new frappe.ui.form.Form(doctype, page, false);
 		const name = frappe.model.make_new_doc_and_get_name(doctype, true);
+		const doc = frappe.get_doc(doctype, name);
+		// The open cashier session takes precedence over the user's company defaults.
+		if (this.company) doc.company = this.company;
+		if (this.pos_profile) doc.pos_profile = this.pos_profile;
 		frm.refresh(name);
 
 		return frm;

@@ -1,0 +1,7 @@
+ARG ATLAS_IMAGE
+ARG BASE_FRONTEND=atlaserp-frontend:7b4413e77e
+FROM ${ATLAS_IMAGE} AS assets
+
+FROM ${BASE_FRONTEND}
+COPY --from=assets /home/frappe/frappe-bench/apps/erpnext/erpnext/public/dist/ /srv/assets/erpnext/dist/
+RUN chmod -R a+rX /srv/assets/erpnext/dist
