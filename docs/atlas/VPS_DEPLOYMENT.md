@@ -7,19 +7,19 @@
   SSH account and its Docker access.
 - Checkout: `/home/alaebhm/atlaserp/source`, GitHub `origin/dev`.
 - Compose configuration includes corrections through commit `f0e6da6b81`.
-- App image: `atlaserp:27f4575e30`, extension release from source commit `27f4575e30`.
-- Frontend image: `atlaserp-frontend:27f4575e30`.
+- App image: `atlaserp:7b4413e77e`, extension release from source commit `7b4413e77e`.
+- Frontend image: `atlaserp-frontend:7b4413e77e`.
 - Frappe source: `459a849fa6e97510d00f260022419bfd03ca75d4`.
-- Engine/extension versions: ERPNext 17 development / ATLASERP 0.2.0.
+- Engine/extension versions: ERPNext 17 development / ATLASERP 0.3.0.
 - Application image identity:
-  `sha256:87ab9421b907da883c7fcb9561f1c67511d5a57a3da1b42383b50a2a79502aed`.
+  `sha256:29c41a30c43b8f6ba9df8e9772db5ae4b089df27df19aac7f06fb81395e66bbe`.
 - Frontend image identity:
-  `sha256:c1dcb9111df591b43dde0cb4b84c8fcea7f2b414d380853c5b3a7c8c640c1de7`.
+  `sha256:fb17789b294fbdb22e3cc1ae3a193c5c39ccae0e8584872b1e21e2341e68602a`.
 
-This extension-only release keeps the verified engine image `atlaserp:bbbded28064e`
-and frontend `atlaserp-frontend:7f7cc8c1e2d6` as build parents. Schema migration
+This extension-only release keeps the previous verified app image `atlaserp:27f4575e30`
+and frontend `atlaserp-frontend:27f4575e30` as build parents. Schema migration
 completed successfully on staging and production. A new full server-side backup
-was taken before migration: `20261006_194557-erp_atlasuse_site-*`.
+was taken before migration: `20261006_203833-erp_atlasuse_site-*`.
 
 The GitHub repository is readable over HTTPS without a token. No GitHub account
 credentials or private deploy keys are needed for the server to pull this public
@@ -44,7 +44,14 @@ the application containers run immutable images rather than mounted source.
 - Business setup page and assets work through public HTTPS; guest access is
   denied; authenticated overview and CSRF enforcement pass.
 - Company/branch scope, duplicate saves and staff disable/re-enable pass on the
-  isolated site. The live site's existing company remains; no demo records were deployed.
+  isolated site. The existing ATLAS BITES company remains. The user-approved
+  Street Pizza (Demo) company, branch, 63 public menu items/prices and POS profile
+  are present; no demo sales, POS openings or GL entries were posted.
+- Shared Desk and website theme assets are registered and served through HTTPS.
+- `/atlas-portal` requires login and links to native scoped document pages.
+- `/atlas-menu` renders the verified public menu and meal-deal choice counts.
+- Desktop Item lists/forms, report controls and POS opening dialog inspected;
+  portal and restaurant menu checked at 390px with no document overflow.
 
 ## Backup and credentials
 
@@ -62,7 +69,9 @@ Neither credentials nor backups belong in GitHub.
 This is the current evaluation build. Company selection, brands, branches,
 dedicated warehouses and scoped business-structure roles are delivered; account
 activation uses administrator User management. POS profile and retail transaction
-tests remain to be completed. No Moroccan
-accounting certification, custom checkout, payment-provider integration or
-ATLASUSE synchronization is claimed. Follow [VPS operations](VPS.md) for updates
+posting was tested on the isolated site (invoice, change, balanced GL and no
+stock movement for menu services), with transactions rolled back. The shared
+interface, customer portal and read-only restaurant menu are delivered. Online
+ordering, kitchen/table workflows, Moroccan accounting certification, custom
+checkout, payment-provider integration and ATLASUSE synchronization remain pending. Follow [VPS operations](VPS.md) for updates
 and backups, and the [roadmap](ROADMAP.md) for product work.
