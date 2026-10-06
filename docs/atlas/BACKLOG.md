@@ -1,9 +1,12 @@
 # Small development backlog
 
-Status: **Development foundation deployed; business setup milestone verified on staging**.
+Status: **Business setup milestone deployed and verified on VPS (ATLASERP 0.2.0)**.
 The company/brand/branch/team implementation is documented in `ONBOARDING.md`.
 Catalog, POS profiles and transaction workflows remain future tickets.
 First vertical: retail and POS. Each ID is a bounded, independently reviewable task.
+
+Next active milestone: shared counter/takeaway and restaurant table checkout.
+Source inspection and delivery slices are recorded in `POS_WORKFLOW.md`.
 
 ## Foundation tickets
 

@@ -7,14 +7,19 @@
   SSH account and its Docker access.
 - Checkout: `/home/alaebhm/atlaserp/source`, GitHub `origin/dev`.
 - Compose configuration includes corrections through commit `f0e6da6b81`.
-- App image: `atlaserp:bbbded28064e`, built from source commit `bbbded28064e`.
-- Frontend image: `atlaserp-frontend:7f7cc8c1e2d6`.
+- App image: `atlaserp:27f4575e30`, extension release from source commit `27f4575e30`.
+- Frontend image: `atlaserp-frontend:27f4575e30`.
 - Frappe source: `459a849fa6e97510d00f260022419bfd03ca75d4`.
-- Engine/extension versions: ERPNext 17 development / ATLASERP 0.1.0.
+- Engine/extension versions: ERPNext 17 development / ATLASERP 0.2.0.
 - Application image identity:
-  `sha256:fcb44b9a1f1e82fd5cc7b5d7d4285ab9e814a8617c01cb813e29a0bc30230358`.
+  `sha256:87ab9421b907da883c7fcb9561f1c67511d5a57a3da1b42383b50a2a79502aed`.
 - Frontend image identity:
-  `sha256:3d59d412dbf09ff3fb2451f8679c39c71a26bc04857e3b7c4672a3b4569d16a3`.
+  `sha256:c1dcb9111df591b43dde0cb4b84c8fcea7f2b414d380853c5b3a7c8c640c1de7`.
+
+This extension-only release keeps the verified engine image `atlaserp:bbbded28064e`
+and frontend `atlaserp-frontend:7f7cc8c1e2d6` as build parents. Schema migration
+completed successfully on staging and production. A new full server-side backup
+was taken before migration: `20261006_194557-erp_atlasuse_site-*`.
 
 The GitHub repository is readable over HTTPS without a token. No GitHub account
 credentials or private deploy keys are needed for the server to pull this public
@@ -36,6 +41,10 @@ the application containers run immutable images rather than mounted source.
 - Socket.IO polling handshake and websocket upgrade succeed through CloudPanel.
 - `bench doctor` reports one online worker; worker logs show scheduled jobs
   completing successfully.
+- Business setup page and assets work through public HTTPS; guest access is
+  denied; authenticated overview and CSRF enforcement pass.
+- Company/branch scope, duplicate saves and staff disable/re-enable pass on the
+  isolated site. The live site's existing company remains; no demo records were deployed.
 
 ## Backup and credentials
 
@@ -50,8 +59,10 @@ Neither credentials nor backups belong in GitHub.
 
 ## Product limits
 
-This is the current evaluation build. Company setup, warehouse, cashier roles,
-POS profile and retail transaction tests remain to be completed. No Moroccan
+This is the current evaluation build. Company selection, brands, branches,
+dedicated warehouses and scoped business-structure roles are delivered; account
+activation uses administrator User management. POS profile and retail transaction
+tests remain to be completed. No Moroccan
 accounting certification, custom checkout, payment-provider integration or
 ATLASUSE synchronization is claimed. Follow [VPS operations](VPS.md) for updates
 and backups, and the [roadmap](ROADMAP.md) for product work.
