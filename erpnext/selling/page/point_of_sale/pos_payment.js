@@ -811,7 +811,8 @@ erpnext.PointOfSale.Payment = class {
 				frappe.msgprint(__("The order changed. Reopen Split payment.")); return;
 			}
 			try {
-				const allocation = erpnext.PointOfSale.CheckoutMath.allocate(due, values.portions || [], modes, p, confirm);
+				const allocation = erpnext.PointOfSale.CheckoutMath.allocate(due,
+					this.split_payment_rows(dlg.fields_dict.portions.grid), modes, p, confirm);
 				for (const row of doc.payments) {
 					const value = allocation.find(value => value.mode_of_payment === row.mode_of_payment);
 					await frappe.model.set_value(row.doctype, row.name, value);
@@ -822,6 +823,20 @@ erpnext.PointOfSale.Payment = class {
 			} catch (error) { frappe.msgprint(__(error.message)); }
 		} });
 		dlg.show();
+	}
+
+	split_payment_rows(grid) {
+		// Include the current editor values even before a debounced change/blur.
+		const rows = grid.get_data().map(row => ({ ...row }));
+		for (const editor of grid.grid_rows) {
+			const row = rows.find(row => row.name === editor.doc.name);
+			if (!row) continue;
+			for (const fieldname of ["mode_of_payment", "amount", "reference_no", "confirmed"]) {
+				const control = editor.on_grid_fields_dict[fieldname];
+				if (control?.get_value) row[fieldname] = control.get_value();
+			}
+		}
+		return rows;
 	}
 
 	show_tip_dialog() {

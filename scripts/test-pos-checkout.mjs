@@ -40,6 +40,16 @@ let submissions = 0, finish;
 context.frappe = { sys_defaults: {}, msgprint: () => {} };
 vm.runInNewContext(readFileSync(new URL("../erpnext/selling/page/point_of_sale/pos_payment.js", import.meta.url), "utf8"), context);
 const payment = Object.create(context.erpnext.PointOfSale.Payment.prototype);
+// A table editor may still hold changes when the operator presses Apply.
+const stale = [{ name: "cash", mode_of_payment: "Cash", amount: 100 },
+    { name: "card", mode_of_payment: "NAPS card", amount: 201, reference_no: "", confirmed: 0 }];
+const grid = { get_data: () => stale, grid_rows: [{ doc: { name: "card" }, on_grid_fields_dict: {
+    reference_no: { get_value: () => "approved-ref" }, confirmed: { get_value: () => 1 },
+} }] };
+const current = payment.split_payment_rows(grid);
+assert.equal(math.allocate(301, current, modes, 2, true)[1].reference_no, "approved-ref");
+assert.equal(stale[1].confirmed, 0, "Reading active editors must not mutate the original table data");
+console.log("PASS: split payment includes active editor reference/confirmation before blur");
 payment.checkout_context = { confirm_external: true };
 payment.events = { get_frm: () => ({ doc: { payments: [] } }), submit_invoice: () => {
     submissions++; return new Promise(resolve => finish = resolve);
