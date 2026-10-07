@@ -57,6 +57,9 @@ context.frappe.ui.Dialog = class {
 	constructor(options) {
 		dialog = this;
 		this.options = options;
+		// Real Frappe validates Link defaults while constructing the dialog.
+		const query = options.fields.find(f => f.fieldname === "pos_profile").get_query();
+		assert.ok(query.filters.company);
 		this.fields_dict = {
 			pos_profile: { get_value: () => options.fields.find(f => f.fieldname === "pos_profile").default },
 			company: { get_value: () => options.fields.find(f => f.fieldname === "company").default },

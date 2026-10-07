@@ -55,6 +55,14 @@ erpnext.PointOfSale.Controller = class {
 		// company supplied in the URL or mutate the user's global company defaults.
 		if (register_context === undefined) register_context = await this.fetch_register_context();
 		if (register_context === false) return;
+		let dialog;
+		// Link defaults are validated during Dialog construction, before its
+		// controls have been assigned. Provide the verified company until then.
+		const pos_profile_query = () => ({
+			query: "erpnext.accounts.doctype.pos_profile.pos_profile.pos_profile_query",
+			filters: { company: dialog?.fields_dict.company.get_value() ||
+				register_context?.company || frappe.defaults.get_default("company") },
+		});
 		const table_fields = [
 			{
 				fieldname: "mode_of_payment",
@@ -73,6 +81,7 @@ erpnext.PointOfSale.Controller = class {
 			},
 		];
 		const fetch_pos_payment_methods = () => {
+			if (!dialog) return;
 			const pos_profile = dialog.fields_dict.pos_profile.get_value();
 			if (!pos_profile) return;
 			frappe.db.get_doc("POS Profile", pos_profile).then(({ payments }) => {
@@ -84,7 +93,7 @@ erpnext.PointOfSale.Controller = class {
 				dialog.fields_dict.balance_details.grid.refresh();
 			});
 		};
-		const dialog = new frappe.ui.Dialog({
+		dialog = new frappe.ui.Dialog({
 			title: __("Create POS Opening Entry"),
 			static: true,
 			fields: [
@@ -140,12 +149,6 @@ erpnext.PointOfSale.Controller = class {
 			},
 			primary_action_label: __("Submit"),
 		});
-		const pos_profile_query = () => {
-			return {
-				query: "erpnext.accounts.doctype.pos_profile.pos_profile.pos_profile_query",
-				filters: { company: dialog.fields_dict.company.get_value() },
-			};
-		};
 		dialog.show();
 		if (register_context) fetch_pos_payment_methods();
 	}

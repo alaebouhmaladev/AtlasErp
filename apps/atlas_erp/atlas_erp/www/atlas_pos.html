@@ -38,7 +38,7 @@
           {% for check in register.checks if check.blocking %}<li><strong>{{ check.label | e }}</strong><p>{{ check.message }}</p>{% if check.href %}<a href="{{ check.href | e }}">{{ _("Review setup") }} ↗</a>{% endif %}</li>{% endfor %}
           </ul>
           {% endif %}
-          <details class="register-checks" {% if not register.blocker_count %}open{% endif %}><summary>{{ _("Register checks") }} · {{ register.checks | length - register.blocker_count }}/{{ register.checks | length }}</summary><ul>{% for check in register.checks %}<li><span aria-hidden="true">{{ '✓' if check.passed else '!' }}</span><span>{{ check.label | e }}</span><span>{{ _("Ready") if check.passed else _("Needs attention") }}</span></li>{% endfor %}</ul></details>
+          <details class="register-checks"><summary>{{ _("Register checks") }} · {{ register.checks | length - register.blocker_count }}/{{ register.checks | length }}</summary><ul>{% for check in register.checks %}<li><span aria-hidden="true">{{ '✓' if check.passed else '!' }}</span><span>{{ check.label | e }}</span><span>{{ _("Ready") if check.passed else _("Needs attention") }}</span></li>{% endfor %}</ul></details>
           <div class="register-actions">{% if register.checkout_href %}<a class="button light" href="{{ register.checkout_href | e }}">{{ _("Resume checkout") if register.state == 'resume' else _("Open checkout") }} →</a>{% else %}<p>{{ _("Resolve the checks above before opening this register.") }}</p>{% endif %}{% if register.profile_href %}<a href="{{ register.profile_href | e }}">{{ _("Register settings") }} ↗</a>{% endif %}</div>
         </article>
       {% else %}
