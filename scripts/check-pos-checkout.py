@@ -30,6 +30,9 @@ def main():
         from atlas_erp.pos_api import checkout
         from erpnext.controllers.sales_and_purchase_return import make_return_doc
         base = frappe.get_doc("POS Profile", "Street Pizza - Maarif - Demo POS")
+        tax_account = frappe.db.get_value("Account", {"company": base.company, "account_type": "Tax",
+            "root_type": "Liability", "is_group": 0, "disabled": 0}, "name")
+        assert tax_account, "The staging company needs a native tax ledger for the VAT fixture"
         liability_root = frappe.db.get_value("Account", {"company": base.company, "root_type": "Liability", "is_group": 1}, "name")
         asset_root = frappe.db.get_value("Account", {"company": base.company, "root_type": "Asset", "is_group": 1}, "name")
         tip = frappe.get_doc({"doctype": "Account", "account_name": "ATLAS test staff tips", "company": base.company,
@@ -74,6 +77,9 @@ def main():
                 "posting_date": frappe.utils.today(), "atlas_tip_amount": tip_amount,
                 "items": [{"item_code": item.name, "qty": 1, "rate": 100}], "apply_discount_on": "Net Total"})
             doc.set_missing_values()
+            doc.set("taxes", [])
+            doc.append("taxes", {"charge_type": "On Net Total", "account_head": tax_account,
+                "description": "STAGING test VAT 20%", "rate": 20, "cost_center": doc.cost_center})
             for row in doc.payments:
                 row.amount = card_amount if row.mode_of_payment == card.name else cash_amount
                 if row.mode_of_payment == card.name:
