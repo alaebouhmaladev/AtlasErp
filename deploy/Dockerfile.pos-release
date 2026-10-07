@@ -2,6 +2,8 @@
 ARG BASE_IMAGE=atlaserp:7b4413e77e
 FROM ${BASE_IMAGE}
 COPY --chown=frappe:frappe erpnext/selling/page/point_of_sale/pos_controller.js apps/erpnext/erpnext/selling/page/point_of_sale/pos_controller.js
+COPY --chown=frappe:frappe erpnext/selling/page/point_of_sale/pos_payment.js erpnext/selling/page/point_of_sale/pos_checkout_math.js apps/erpnext/erpnext/selling/page/point_of_sale/
+COPY --chown=frappe:frappe erpnext/public/js/point-of-sale.bundle.js apps/erpnext/erpnext/public/js/point-of-sale.bundle.js
 COPY --chown=frappe:frappe erpnext/accounts/doctype/sales_invoice/services/pos.py apps/erpnext/erpnext/accounts/doctype/sales_invoice/services/pos.py
 COPY --chown=frappe:frappe scripts apps/erpnext/scripts
 COPY --chown=frappe:frappe apps/atlas_erp apps/atlas_erp

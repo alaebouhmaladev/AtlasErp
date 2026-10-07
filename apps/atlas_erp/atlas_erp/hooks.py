@@ -11,10 +11,17 @@ app_home = "/atlas"
 # The ERP engine supplies the single ATLASERP launcher entry. This companion
 # app adds the experience and branding without adding a duplicate product icon.
 add_to_apps_screen = []
-after_install = ["atlas_erp.branding.apply_branding", "atlas_erp.setup_install.install_roles"]
+after_install = ["atlas_erp.branding.apply_branding", "atlas_erp.setup_install.install_roles", "atlas_erp.checkout_install.install_fields"]
 before_migrate = "atlas_erp.setup_install.install_roles"
-after_migrate = ["atlas_erp.branding.apply_branding", "atlas_erp.setup_install.install_roles"]
+after_migrate = ["atlas_erp.branding.apply_branding", "atlas_erp.setup_install.install_roles", "atlas_erp.checkout_install.install_fields"]
 boot_session = "atlas_erp.branding.boot_session"
+doc_events = {
+    "POS Profile": {"validate": "atlas_erp.pos_api.checkout.validate_profile"},
+    "Sales Invoice": {"before_validate": "atlas_erp.pos_api.checkout.prepare_invoice",
+                      "validate": "atlas_erp.pos_api.checkout.validate_invoice"},
+    "POS Invoice": {"before_validate": "atlas_erp.pos_api.checkout.prepare_invoice",
+                    "validate": "atlas_erp.pos_api.checkout.validate_invoice"},
+}
 update_website_context = "atlas_erp.branding.website_context"
 web_include_css = ["/assets/atlas_erp/css/theme-v3.1.css", "/assets/atlas_erp/css/web-v3.1.css"]
 web_include_js = ["/assets/atlas_erp/js/web-v3.1.js"]

@@ -75,7 +75,7 @@ authoritative; avoid creating duplicate implementations for the same capability.
 | SQ-04 | Variants, sizes, bundles and required/optional modifiers with min/max choices and price deltas | Engine variants/prices; Build restaurant selection contract | 2 |
 | SQ-05 | Hold, name, recall, edit and recover unpaid carts; committed orders retain revisions | Build durable cart/order store | 2–4 |
 | SQ-06 | Server quotation, currency precision, tax-inclusive/exclusive prices, permitted discounts and rounding | Engine calculations; Build versioned quote/submit API | 2 |
-| SQ-07 | Cash tender/change, split tenders, externally recorded card/transfer and auditable tender references | Engine tenders; Build guided payment and reconciliation | 2, 6 |
+| SQ-07 | Cash tender/change, split tenders, externally recorded card/transfer and auditable tender references | 0.5.0 guided split/confirmation; provider/settlement reconciliation pending ([checkout contract](PAYMENTS_AND_SERVICES.md)) | 2, 6 |
 | SQ-08 | Double tap, timeout and replay return one invoice; failed attempts leave cart and no partial postings | Build request journal + unique identity + transaction boundary | 2 |
 | SQ-09 | Brand/location receipts, print/reprint, digital receipt delivery opt-in, fiscal invoice reference | Engine printing; Build layouts, adapters and delivery | 2, 6 |
 | SQ-10 | Full/partial returns, item/tax/discount reversal, manager approval, original-sale link and exchanges | Engine return invoices; Build guided authorization and tender reversal | 2, 5 |

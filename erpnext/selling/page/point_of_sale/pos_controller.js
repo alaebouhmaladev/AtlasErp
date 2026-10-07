@@ -491,7 +491,7 @@ erpnext.PointOfSale.Controller = class {
 				},
 
 				submit_invoice: () => {
-					this.frm.savesubmit().then((r) => {
+					return this.frm.savesubmit().then((r) => {
 						this.toggle_components(false);
 						this.toggle_submitted_invoice_summary(true);
 						frappe.show_alert({
@@ -500,6 +500,7 @@ erpnext.PointOfSale.Controller = class {
 						});
 					});
 				},
+				add_service_item: item => this.on_cart_update({ field: "qty", value: "+1", item }),
 			},
 		});
 	}

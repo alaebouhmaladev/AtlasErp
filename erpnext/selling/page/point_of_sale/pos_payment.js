@@ -24,6 +24,12 @@ erpnext.PointOfSale.Payment = class {
 					<div class="payment-container-left">
 						<div class="section-label payment-section">${__("Payment Method")}</div>
 						<div class="payment-modes"></div>
+						<div class="atlas-checkout-tools">
+							<button type="button" class="btn btn-default atlas-split">${__("Split payment")}</button>
+							<button type="button" class="btn btn-default atlas-tip hidden">${__("Add tip")}</button>
+							<button type="button" class="btn btn-default atlas-addons hidden">${__("Service add-ons")}</button>
+						</div>
+						<div class="atlas-checkout-note text-muted"></div>
 					</div>
 					<div class="payment-container-right">
 						<div class="fields-numpad-container">
@@ -63,7 +69,7 @@ erpnext.PointOfSale.Payment = class {
 			primary_action(values) {
 				me.set_values_to_frm(values);
 				if (this.complete_order) {
-					me.events.submit_invoice();
+					me.submit_with_external_confirmation();
 				}
 				this.hide();
 			},
@@ -186,6 +192,9 @@ erpnext.PointOfSale.Payment = class {
 
 	bind_events() {
 		const me = this;
+		this.$component.on("click", ".atlas-split", () => this.show_split_payment());
+		this.$component.on("click", ".atlas-tip", () => this.show_tip_dialog());
+		this.$component.on("click", ".atlas-addons", () => this.show_service_addons());
 
 		this.$payment_modes.on("click", ".mode-of-payment", function (e) {
 			const mode_clicked = $(this);
@@ -223,6 +232,7 @@ erpnext.PointOfSale.Payment = class {
 
 		// change payment amount for selected mode on key press from keyboard
 		$(document).on("keydown", function (e) {
+			if ($(e.target).closest(".modal").length || !me.$component.is(":visible")) return;
 			if (me.selected_mode) {
 				me.on_numpad_clicked(e.key, false);
 			}
@@ -265,7 +275,7 @@ erpnext.PointOfSale.Payment = class {
 			me.selected_mode.set_value(value);
 		});
 
-		this.$component.on("click", ".submit-order-btn", () => {
+		this.$component.on("click", ".submit-order-btn", async () => {
 			const doc = this.events.get_frm().doc;
 			const paid_amount = doc.paid_amount;
 			const items = doc.items;
@@ -288,7 +298,7 @@ erpnext.PointOfSale.Payment = class {
 				return;
 			}
 
-			this.events.submit_invoice();
+			await this.submit_with_external_confirmation();
 		});
 
 		frappe.ui.form.on("POS Invoice", "paid_amount", (frm) => {
@@ -365,7 +375,7 @@ erpnext.PointOfSale.Payment = class {
 					message = __("Payment of {0} received successfully.", [
 						format_currency(amount, doc.currency, 0),
 					]);
-					this.events.submit_invoice();
+					this.submit_with_external_confirmation();
 					cur_frm.reload_doc();
 				} else {
 					message = __(
@@ -394,9 +404,7 @@ erpnext.PointOfSale.Payment = class {
 
 	auto_set_remaining_amount() {
 		const doc = this.events.get_frm().doc;
-		const grand_total = cint(frappe.sys_defaults.disable_rounded_total)
-			? doc.grand_total
-			: doc.rounded_total;
+		const grand_total = this.invoice_total(doc);
 		const remaining_amount = grand_total - doc.paid_amount;
 		const current_value = this.selected_mode ? this.selected_mode.get_value() : undefined;
 		if (!current_value && remaining_amount > 0 && this.selected_mode) {
@@ -454,6 +462,7 @@ erpnext.PointOfSale.Payment = class {
 		this.make_invoice_field_dialog();
 		this.update_totals_section();
 		this.focus_on_default_mop();
+		this.load_checkout_context();
 	}
 
 	after_render() {
@@ -536,6 +545,7 @@ erpnext.PointOfSale.Payment = class {
 				df: {
 					label: p.mode_of_payment,
 					fieldtype: "Currency",
+					options: currency,
 					placeholder: __("Enter {0} amount.", [__(p.mode_of_payment)]),
 					onchange: function () {
 						const current_value = frappe.model.get_value(p.doctype, p.name, "amount");
@@ -675,9 +685,7 @@ erpnext.PointOfSale.Payment = class {
 	update_totals_section(doc) {
 		if (!doc) doc = this.events.get_frm().doc;
 		const paid_amount = doc.paid_amount;
-		const grand_total = cint(frappe.sys_defaults.disable_rounded_total)
-			? doc.grand_total
-			: doc.rounded_total;
+		const grand_total = this.invoice_total(doc);
 		const remaining = grand_total - doc.paid_amount;
 		const change = doc.change_amount || remaining <= 0 ? -1 * remaining : undefined;
 		const currency = doc.currency;
@@ -733,5 +741,182 @@ erpnext.PointOfSale.Payment = class {
 			}
 		}
 		return true;
+	}
+
+	invoice_total(doc = this.events.get_frm().doc) {
+		return cint(doc.disable_rounded_total ?? frappe.sys_defaults.disable_rounded_total)
+			? flt(doc.grand_total) : flt(doc.rounded_total || doc.grand_total);
+	}
+
+	payment_due() {
+		const doc = this.events.get_frm().doc;
+		// Native loyalty changes the default tender. Keep its settled contribution.
+		return this.invoice_total(doc) - flt(doc.loyalty_amount) / (flt(doc.conversion_rate) || 1) - flt(doc.write_off_amount) - flt(doc.total_advance);
+	}
+
+	async load_checkout_context() {
+		const doc = this.events.get_frm().doc;
+		this.$component.find(".atlas-tip,.atlas-addons").addClass("hidden");
+		this.checkout_context = null;
+		try {
+			const { message } = await frappe.call({ method: "atlas_erp.pos_api.checkout.context", type: "GET",
+				args: { pos_profile: doc.pos_profile } });
+			if (this.events.get_frm().doc !== doc) return;
+			this.checkout_context = message;
+			this.$component.find(".atlas-tip").toggleClass("hidden", !message.tips_enabled && !doc.atlas_tip_amount);
+			this.$component.find(".atlas-tip").text(doc.is_return ? __("Review tip refund") : __("Add tip"));
+			this.$component.find(".atlas-addons").toggleClass("hidden", !message.addons_enabled || !!doc.is_return);
+			this.$component.find(".atlas-split").prop("disabled", !!doc.is_return);
+			this.$component.find(".atlas-checkout-note").text(message.confirm_external ?
+				__("Approve the payment on your terminal first. The POS records its reference.") : "");
+		} catch (error) {
+			this.$component.find(".atlas-checkout-note").text(__("Checkout settings could not be loaded. Reopen checkout to try again."));
+		}
+	}
+
+	show_split_payment() {
+		const doc = this.events.get_frm().doc;
+		if (doc.is_return) return;
+		const p = precision("paid_amount", doc) ?? 2;
+		const due = this.payment_due();
+		const modes = doc.payments.map(row => ({ mode_of_payment: row.mode_of_payment, type: row.type }));
+		const default_mode = modes.find(mode => mode.type === "Cash")?.mode_of_payment || modes[0]?.mode_of_payment;
+		const confirm = !!this.checkout_context?.confirm_external;
+		this.selected_mode = "";
+		let dlg;
+		dlg = new frappe.ui.Dialog({ title: __("Split payment"), size: "large", fields: [
+			{ fieldname: "help", fieldtype: "HTML", options: `<p>${__("Amount due")}: <strong>${format_currency(due, doc.currency)}</strong></p><p>${__("One invoice, multiple payment portions. Each card portion must be approved on the terminal before you confirm it here.")}</p>` },
+			{ fieldname: "shares", fieldtype: "Int", label: __("Equal shares"), default: 2 },
+			{ fieldname: "divide", fieldtype: "Button", label: __("Divide equally"), click: () => {
+				try {
+					dlg.fields_dict.portions.df.data = erpnext.PointOfSale.CheckoutMath.shares(due, Number(dlg.get_value("shares")), p)
+						.map(amount => ({ mode_of_payment: default_mode, amount }));
+					dlg.fields_dict.portions.grid.refresh();
+				} catch (error) { frappe.msgprint(__(error.message)); }
+			} },
+			{ fieldname: "portions", fieldtype: "Table", label: __("Payment portions"), in_place_edit: true,
+				data: doc.payments.filter(row => row.amount).map(row => ({ mode_of_payment: row.mode_of_payment,
+					amount: row.amount, reference_no: row.reference_no,
+					confirmed: row.atlas_external_confirmed && row.atlas_confirmed_amount === row.amount })),
+				fields: [
+					{ fieldname: "mode_of_payment", fieldtype: "Select", label: __("Payment method"), options: modes.map(mode => mode.mode_of_payment), in_list_view: 1, reqd: 1 },
+					{ fieldname: "amount", fieldtype: "Currency", label: __("Amount"), options: doc.currency, in_list_view: 1, reqd: 1 },
+					{ fieldname: "reference_no", fieldtype: "Data", label: __("Transaction reference"), in_list_view: 1 },
+					{ fieldname: "confirmed", fieldtype: "Check", label: __("External payment approved"), in_list_view: 1 },
+				] },
+		], primary_action_label: __("Apply payments"), primary_action: async values => {
+			if (this.events.get_frm().doc !== doc || this.payment_due() !== due) {
+				frappe.msgprint(__("The order changed. Reopen Split payment.")); return;
+			}
+			try {
+				const allocation = erpnext.PointOfSale.CheckoutMath.allocate(due, values.portions || [], modes, p, confirm);
+				for (const row of doc.payments) {
+					const value = allocation.find(value => value.mode_of_payment === row.mode_of_payment);
+					await frappe.model.set_value(row.doctype, row.name, value);
+				}
+				this.events.get_frm().cscript.calculate_outstanding_amount();
+				this.render_payment_mode_dom(); this.update_totals_section();
+				dlg.hide();
+			} catch (error) { frappe.msgprint(__(error.message)); }
+		} });
+		dlg.show();
+	}
+
+	show_tip_dialog() {
+		const doc = this.events.get_frm().doc;
+		const settings = this.checkout_context;
+		if (!settings || (!settings.tips_enabled && !doc.atlas_tip_amount)) return;
+		this.selected_mode = "";
+		let dlg;
+		dlg = new frappe.ui.Dialog({ title: doc.is_return ? __("Tip refund") : __("Optional staff tip"), fields: [
+			{ fieldname: "percentage", fieldtype: "Select", label: __("Tip choice"),
+				options: [__("Custom amount"), __("No tip"), ...settings.tip_presets.map(p => `${p}%`)],
+				default: __("Custom amount"), onchange: () => {
+					const choice = dlg?.get_value("percentage");
+					if (!choice || choice === __("Custom amount")) return;
+					dlg.set_value("amount", choice === __("No tip") ? 0 :
+						flt(Math.abs(doc.net_total) * parseFloat(choice) / 100, precision("atlas_tip_amount", doc)));
+				} },
+			{ fieldname: "amount", fieldtype: "Currency", label: doc.is_return ? __("Tip to refund") : __("Tip amount"),
+				options: doc.currency, default: Math.abs(doc.atlas_tip_amount || 0), reqd: 0,
+				description: __("Tips are held in the company's staff-tip account. They are not paid to staff automatically.") },
+		], primary_action_label: __("Apply"), primary_action: async ({ amount }) => {
+			if (this.events.get_frm().doc !== doc) return;
+			if (!Number.isFinite(Number(amount || 0)) || Number(amount) < 0) {
+				frappe.msgprint(__("Enter a non-negative tip amount.")); return;
+			}
+			if (doc.apply_discount_on === "Grand Total" && (doc.discount_amount || doc.additional_discount_percentage)) {
+				frappe.msgprint(__("Apply the discount to Net Total before adding a tip.")); return;
+			}
+			const frm = this.events.get_frm();
+			const original_tip = doc.taxes.find(row => row.atlas_is_tip);
+			doc.taxes = doc.taxes.filter(row => !row.atlas_is_tip);
+			doc.taxes.forEach((row, i) => row.idx = i + 1);
+			doc.atlas_tip_amount = flt((doc.is_return ? -1 : 1) * Number(amount || 0), precision("atlas_tip_amount", doc));
+			if (doc.atlas_tip_amount) frm.add_child("taxes", { charge_type: "Actual", atlas_is_tip: 1,
+				account_head: doc.is_return ? original_tip?.account_head : settings.tip_account,
+				description: __("Staff tip"), tax_amount: doc.atlas_tip_amount, cost_center: doc.cost_center });
+			frm.dirty();
+			await frm.cscript.calculate_taxes_and_totals();
+			this.render_payment_mode_dom(); this.update_totals_section();
+			dlg.hide();
+		} });
+		dlg.show();
+	}
+
+	async show_service_addons() {
+		const doc = this.events.get_frm().doc;
+		const { message: items } = await frappe.call({ method: "atlas_erp.pos_api.checkout.service_addons", type: "GET",
+			args: { pos_profile: doc.pos_profile } });
+		if (this.events.get_frm().doc !== doc) return;
+		if (!items.length) { frappe.msgprint(__("Add enabled non-stock sales items and prices to the register's service add-on group.")); return; }
+		let dlg;
+		dlg = new frappe.ui.Dialog({ title: __("Service add-ons"), fields: [
+			{ fieldname: "item", fieldtype: "Select", label: __("Service"), reqd: 1,
+				options: items.map(item => ({ value: item.item_code, label: `${item.item_name} · ${format_currency(item.rate, item.currency)}` })) },
+		], primary_action_label: __("Add to order"), primary_action: async ({ item }) => {
+			if (this.events.get_frm().doc !== doc) return;
+			const selected = items.find(row => row.item_code === item);
+			if (!selected) return;
+			dlg.hide(); this.edit_cart();
+			await this.events.add_service_item(selected);
+		} });
+		dlg.show();
+	}
+
+	async submit_with_external_confirmation() {
+		const doc = this.events.get_frm().doc;
+		if (this._submitting || this._confirmation_dialog) return;
+		const external = doc.payments.filter(row => row.type === "Bank" && row.amount &&
+			(!row.atlas_external_confirmed || !row.reference_no || row.atlas_confirmed_amount !== row.amount));
+		if (!this.checkout_context) {
+			frappe.msgprint(__("Reopen checkout to load the register's payment settings.")); return;
+		}
+		if (this.checkout_context.confirm_external && external.length) {
+			this.selected_mode = "";
+			const amounts = external.map(row => row.amount);
+			const total = this.invoice_total(doc);
+			this._confirmation_dialog = new frappe.ui.Dialog({ title: __("Confirm external payment"), fields: external.flatMap((row, i) => [
+				{ fieldname: `amount_${i}`, fieldtype: "HTML", options: `<p>${frappe.utils.escape_html(row.mode_of_payment)}: <strong>${format_currency(row.amount, doc.currency)}</strong></p>` },
+				{ fieldname: `ref_${i}`, fieldtype: "Data", label: __("Transaction reference (no card numbers)"), reqd: 1 },
+				{ fieldname: `ok_${i}`, fieldtype: "Check", label: __("The terminal or bank confirmed this payment/refund"), reqd: 1 },
+			]), primary_action_label: __("Confirm and complete"), primary_action: async values => {
+				if (this.events.get_frm().doc !== doc || this.invoice_total(doc) !== total ||
+					external.some((row, i) => row.amount !== amounts[i])) {
+					frappe.msgprint(__("The payment amount changed. Reopen checkout.")); return;
+				}
+				for (const [i, row] of external.entries()) {
+					if (!values[`ok_${i}`] || !values[`ref_${i}`]?.trim()) return;
+					await frappe.model.set_value(row.doctype, row.name, { reference_no: values[`ref_${i}`].trim(), atlas_external_confirmed: 1, atlas_confirmed_amount: row.amount });
+				}
+				this._confirmation_dialog.hide();
+				this._confirmation_dialog = null;
+				await this.submit_with_external_confirmation();
+			} });
+			this._confirmation_dialog.$wrapper.on("hidden.bs.modal", () => this._confirmation_dialog = null);
+			this._confirmation_dialog.show(); return;
+		}
+		this._submitting = true;
+		try { await this.events.submit_invoice(); } finally { this._submitting = false; }
 	}
 };

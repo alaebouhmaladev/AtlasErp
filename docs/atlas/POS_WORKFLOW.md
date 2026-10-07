@@ -3,7 +3,9 @@
 Started 2026-10-06 after business setup release `27f4575e30`. The user selected
 both counter/takeaway sales and restaurant table service. This document records
 the source inspection and the bounded implementation sequence. Checkout is not
-yet delivered or transaction-verified.
+yet delivered as the Android/offline/table workflow. Release 0.5.0 adds guided
+split tenders, configured tips and non-stock service add-ons to the native online
+checkout; see [payments and service workflows](PAYMENTS_AND_SERVICES.md).
 
 ## Findings from the checked-in ERPNext engine
 
