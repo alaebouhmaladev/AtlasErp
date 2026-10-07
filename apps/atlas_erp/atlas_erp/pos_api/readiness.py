@@ -169,4 +169,5 @@ def register_context(pos_profile):
     result = inspect_register(profile)
     if result["blocker_count"]:
         frappe.throw(_("This register needs attention. Return to ATLAS POS to review the checks."))
-    return {"company": profile.company, "pos_profile": profile.name, "state": result["state"]}
+    return {"company": profile.company, "pos_profile": profile.name, "state": result["state"],
+            "company_currency": frappe.db.get_value("Company", profile.company, "default_currency")}

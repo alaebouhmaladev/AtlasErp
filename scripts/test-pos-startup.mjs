@@ -51,7 +51,7 @@ context.frappe.db = { get_doc: async (doctype, name) => {
 } };
 context.frappe.call = async request => {
 	handoffRequest = request;
-	return { message: { company: "Server company", pos_profile: "Allowed register" } };
+	return { message: { company: "Server company", pos_profile: "Allowed register", company_currency: "MAD" } };
 };
 context.frappe.ui.Dialog = class {
 	constructor(options) {
@@ -75,6 +75,10 @@ assert.equal(handoffRequest.args.pos_profile, "Allowed register");
 assert.equal(dialog.options.fields.find(f => f.fieldname === "company").default, "Server company");
 assert.equal(profileRead, "Allowed register");
 assert.equal(dialog.fields_dict.balance_details.df.data[0].mode_of_payment, "Cash");
+assert.equal(dialog.fields_dict.balance_details.df.data[0].currency, "MAD");
+assert.equal(dialog.options.fields.find(f => f.fieldname === "balance_details").fields.find(f => f.fieldname === "opening_amount").options, "currency");
+assert.equal(dialog.options.fields.find(f => f.fieldname === "company").read_only, true);
+assert.equal(dialog.options.fields.find(f => f.fieldname === "pos_profile").read_only, true);
 dialog = undefined;
 context.frappe.call = async () => { throw new Error("Not permitted"); };
 await controller.create_opening_voucher();
@@ -85,7 +89,7 @@ assert.equal(dialog.options.fields.find(f => f.fieldname === "company").default,
 console.log("PASS: ATLAS register handoff uses verified company/profile, rejects denied requests and preserves ordinary native entry");
 
 context.window.location.search = "?atlas_profile=Allowed%20register";
-context.frappe.call = async () => ({ message: { company: "Server company", pos_profile: "Allowed register" } });
+context.frappe.call = async () => ({ message: { company: "Server company", pos_profile: "Allowed register", company_currency: "MAD" } });
 let resumedSession;
 let changedSessionMessage;
 controller.prepare_app_defaults = data => { resumedSession = data; };

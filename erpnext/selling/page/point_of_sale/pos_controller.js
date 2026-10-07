@@ -21,7 +21,8 @@ erpnext.PointOfSale.Controller = class {
 				args: { pos_profile: requested_profile },
 				type: "GET",
 			});
-			if (!response.message?.company || response.message.pos_profile !== requested_profile) {
+			if (!response.message?.company || !response.message.company_currency ||
+				response.message.pos_profile !== requested_profile) {
 				throw new Error("Register context unavailable");
 			}
 			return response.message;
@@ -76,9 +77,10 @@ erpnext.PointOfSale.Controller = class {
 				fieldname: "opening_amount",
 				fieldtype: "Currency",
 				in_list_view: 1,
-				label: __("Opening Amount"),
-				options: "company:company_currency",
+				label: __("Opening Amount") + (register_context ? ` (${register_context.company_currency})` : ""),
+				options: register_context ? "currency" : "company:company_currency",
 			},
+			{ fieldname: "currency", fieldtype: "Data", hidden: 1, read_only: 1 },
 		];
 		const fetch_pos_payment_methods = () => {
 			if (!dialog) return;
@@ -88,7 +90,9 @@ erpnext.PointOfSale.Controller = class {
 				dialog.fields_dict.balance_details.df.data = [];
 				payments.forEach((pay) => {
 					const { mode_of_payment } = pay;
-					dialog.fields_dict.balance_details.df.data.push({ mode_of_payment, opening_amount: "0" });
+				dialog.fields_dict.balance_details.df.data.push({
+					mode_of_payment, opening_amount: "0", currency: register_context?.company_currency,
+				});
 				});
 				dialog.fields_dict.balance_details.grid.refresh();
 			});
@@ -103,6 +107,7 @@ erpnext.PointOfSale.Controller = class {
 					default: register_context?.company || frappe.defaults.get_default("company"),
 					options: "Company",
 					fieldname: "company",
+					read_only: Boolean(register_context),
 					reqd: 1,
 				},
 				{
@@ -110,6 +115,7 @@ erpnext.PointOfSale.Controller = class {
 					label: __("POS Profile"),
 					options: "POS Profile",
 					fieldname: "pos_profile",
+					read_only: Boolean(register_context),
 					default: register_context?.pos_profile,
 					reqd: 1,
 					get_query: () => pos_profile_query(),
@@ -136,7 +142,8 @@ erpnext.PointOfSale.Controller = class {
 				}
 
 				// filter balance details for empty rows
-				balance_details = balance_details.filter((d) => d.mode_of_payment);
+				balance_details = balance_details.filter((d) => d.mode_of_payment)
+					.map(({ mode_of_payment, opening_amount }) => ({ mode_of_payment, opening_amount }));
 
 				const method = "erpnext.selling.page.point_of_sale.point_of_sale.create_opening_voucher";
 				const res = await frappe.call({
@@ -148,6 +155,8 @@ erpnext.PointOfSale.Controller = class {
 				dialog.hide();
 			},
 			primary_action_label: __("Submit"),
+			secondary_action_label: register_context ? __("Change register") : null,
+			secondary_action: register_context ? () => window.location.assign("/atlas-pos") : null,
 		});
 		dialog.show();
 		if (register_context) fetch_pos_payment_methods();
