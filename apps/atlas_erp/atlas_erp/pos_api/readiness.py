@@ -120,7 +120,7 @@ def inspect_register(profile, own_sessions=None):
     other_register = any(s.pos_profile != profile.name for s in own_sessions)
     other_cashier = any(s.user != user for s in register_sessions)
     current_day = all(frappe.utils.get_date_str(s.period_start_date) == frappe.utils.today()
-                      for s in own_here)
+                      for s in register_sessions + own_here)
     add("session", _("Cashier session"), not (multiple or other_register or other_cashier),
         _("Multiple open sessions need a manager's review.") if multiple else
         _("Finish your session at the other register before opening this one.") if other_register else
