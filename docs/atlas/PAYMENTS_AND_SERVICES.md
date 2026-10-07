@@ -106,7 +106,47 @@ protected live Street Pizza opening POS-OPE-2026-00002 and its 301 MAD sale.
 
 `node scripts/test-pos-checkout.mjs` verifies rounding, split coverage, cash change,
 external confirmation, unknown/negative/non-finite tenders and the submit guard.
+It also covers unnamed dialog rows, active editor values, native default-payment
+behavior and delayed changes from replaced payment controls.
 `scripts/check-pos-checkout.py` is restricted to the isolated onboarding site:
 it tests native invoice/GL posting and tip reversal, account/preset validation,
 external amount guards and service catalog, then rolls back its fixtures.
-Staging/browser and live rollout evidence is recorded after those checks pass.
+
+Verified and deployed on 2026-10-07 from code commit **c61b5bd320**:
+
+- Staging native accounting: 100 MAD service + 20 VAT + 10 staff tip = 130;
+  cash 40/card 90; balanced GL credits the tip liability. The native full return
+  reverses that liability; a duplicate tip refund is rejected. Financial fixtures
+  are rolled back.
+- Browser: a 77 MAD rounded invoice with a 5.90 MAD tip retains cash 38.50/card
+  38.50 after applying equal shares, including the active card reference and
+  approval editor. Paid amount is 77 and remaining amount is zero. The browser
+  invoice was not submitted. All disposable staging UI records were removed;
+  staging again has zero sales, openings and GL entries, 63 items and one profile.
+- Live HTTPS: authenticated MAD checkout context/service catalog, guest denial,
+  forged register rejection and existing register-readiness checks pass. Both
+  checkout assets return 200 over valid HTTPS. Other installed app bundle mappings
+  remain identical. Existing profiles retain tips/confirmation/add-on settings off.
+- A fresh database, configuration, public-file and private-file backup was taken
+  before installation (`20261007_161014`); all four artifacts are non-empty. This
+  verifies backup creation, not a restore drill or off-server backup.
+- A before/after canonical record comparison preserves the protected opening and
+  every existing sales invoice, GL entry and POS Profile except new empty/default fields.
+  All 12 audited business record counts match: in particular 2 openings, 2 sales
+  invoices, 4 GL entries, 2 profiles and 63 menu items. Protected opening
+  **POS-OPE-2026-00002** remains open and submitted; its **301 MAD** sale remains
+  submitted. No live sale, tip, refund or cash session was posted by this rollout.
+
+Live backend/websocket/worker/scheduler use `atlaserp:c61b5bd320`; frontend uses
+`atlaserp-frontend:c61b5bd320`. The running application reports **0.5.0**. Docker
+image IDs:
+
+```
+app      sha256:d82f1c97ca73536362334a90f7914b7be584d044706f092bee0c36e5b421773d
+frontend sha256:c8d6b285aa6fec21ab5bfd381f0770ee5dffee96d00d722fb072b71c897a21f0
+```
+
+The published POS bundle is `point-of-sale.bundle.SXHVGFY4.js`; the separate
+checkout stylesheet is `pos-checkout-v1.css`. The local staging preview is saved
+in ignored `.atlas/pos-release/stage-checkout.png`. Follow the profile setup above
+before enabling tips or terminal confirmation for a real register.

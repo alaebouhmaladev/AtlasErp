@@ -52,8 +52,8 @@ The installed development engine remains the recorded evaluation baseline.
 
 Counter mode enters the shared cart directly. Table mode maintains an unpaid order
 before entering that same checkout. Existing ERPNext calculations and posting
-remain the financial source of truth. Recipe/ingredient consumption, split bills,
-table transfers, tips and external payment-provider integrations follow as separate
+remain the financial source of truth. Recipe/ingredient consumption, separate bills,
+table transfers, staff tip allocation and automatic payment-provider integrations follow as separate
 tasks after the basic counter and table paths pass.
 
 ## Initial permission contract

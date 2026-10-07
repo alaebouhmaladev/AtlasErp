@@ -9,16 +9,19 @@ with every internal behavior, paid plan, country or future Square release.
 The first customer experience remains **Moroccan retail and restaurants**, both
 counter/takeaway and table service. Android tablet POS comes first, iOS follows.
 **Offline cash and shared-router restaurant devices are required pilot gates.**
-No printer model, payment processor or router host is assumed.
+Printer models and router hosts remain configurable. The merchant has a NAPS TPE;
+automatic terminal communication awaits its model and activated SDK access.
 
 ## What exists today
 
-ATLASERP 0.4.2 retains the ATLAS workspace/theme, company/brand/branch/team metadata,
+ATLASERP 0.5.0 retains the ATLAS workspace/theme, company/brand/branch/team metadata,
 Street Pizza's 63-item demo menu, native ERP checkout, stock/accounting engine,
 customer entry pages and installed HRMS/CRM applications. Menu preview is
 read-only. Native ERP features are reusable building blocks: their availability
 does not mean the corresponding ATLAS tablet, offline or restaurant workflow is
 complete. Generic ERP API permissions still need an operational scope audit.
+Release 0.5.0 adds guided split tenders, configurable pooled tips and priced service
+add-ons to native online checkout ([checkout contract](PAYMENTS_AND_SERVICES.md)).
 
 The first implementation against this benchmark is **0.4.2 register readiness**
 ([cashier guide and verification](POS_READINESS.md)):
@@ -88,7 +91,7 @@ authoritative; avoid creating duplicate implementations for the same capability.
 | SQ-17 | Send/hold/fire courses; station routing; later additions/cancellation reason remain traceable | Build kitchen event stream | 4 |
 | SQ-18 | KDS preparation/ready/served queue, expeditor, timers, recall and measured prep time | Build kitchen app and durable acknowledgments | 4 |
 | SQ-19 | Split bill by item, seat, equal share or selected amount; no double settlement or rounding drift | Build settlement allocation and payment orchestration | 4 |
-| SQ-20 | Tabs, optional gratuity, tips, void/comp approvals and discount reasons | Build order/tip policies; preauthorization is Provider | 4, 6 |
+| SQ-20 | Tabs, optional gratuity, tips, void/comp approvals and discount reasons | 0.5.0 optional pooled tips in direct Sales Invoice mode; staff allocation and approval policies pending; preauthorization is Provider | 4, 6 |
 | SQ-21 | Availability/sold-out counts and scheduled menus consistently reach POS, kiosk and online menu | Engine stock; Build availability projection and menu schedule | 4–6 |
 | SQ-22 | Ingredient recipes, portion yields, preparation stock, wastage and food-cost analysis | Engine BOM/stock; Build restaurant recipe consumption rules | 5 |
 | SQ-23 | Waiter → register → kitchen/customer screens/printers keep operating on the same router with WAN down | Build local hub, pairing, command journal and conflict recovery | 4 |
