@@ -543,11 +543,14 @@ erpnext.PointOfSale.Payment = class {
 			const me = this;
 			this[`${mode}_control`] = frappe.ui.form.make_control({
 				df: {
+					fieldname: "amount",
 					label: p.mode_of_payment,
 					fieldtype: "Currency",
 					options: "currency",
 					placeholder: __("Enter {0} amount.", [__(p.mode_of_payment)]),
 					onchange: function () {
+						// Ignore a delayed change from a control replaced by a totals render.
+						if (me[`${mode}_control`] !== this) return;
 						const current_value = frappe.model.get_value(p.doctype, p.name, "amount");
 						if (current_value != this.value) {
 							frappe.model
@@ -559,12 +562,13 @@ erpnext.PointOfSale.Payment = class {
 						}
 					},
 				},
-				doc: { currency },
+				doc: { currency, amount: p.amount },
 				parent: this.$payment_modes.find(`.${mode}.mode-of-payment-control`),
 				render_input: true,
 			});
 			this[`${mode}_control`].toggle_label(false);
-			this[`${mode}_control`].set_value(p.amount);
+			// Rendering a value must not enqueue a model mutation for an old amount.
+			this[`${mode}_control`].set_input(p.amount);
 		});
 		this.highlight_selected_mode();
 
@@ -818,8 +822,13 @@ erpnext.PointOfSale.Payment = class {
 				this.events.get_frm().set_default_payment = 0;
 				for (const row of doc.payments) {
 					const value = allocation.find(value => value.mode_of_payment === row.mode_of_payment);
-					await frappe.model.set_value(row.doctype, row.name, value);
+					// Apply all amounts before native totals refresh their controls. Sequential
+					// amount triggers can render the next tender's previous (zero) value.
+					for (const field of ["amount", "reference_no", "atlas_external_confirmed", "atlas_confirmed_amount"]) {
+						row[field] = value[field];
+					}
 				}
+				this.events.get_frm().dirty();
 				this.events.get_frm().cscript.calculate_outstanding_amount(false);
 				this.render_payment_mode_dom(); this.update_totals_section();
 				dlg.hide();
@@ -830,9 +839,13 @@ erpnext.PointOfSale.Payment = class {
 
 	split_payment_rows(grid) {
 		// Include the current editor values even before a debounced change/blur.
-		const rows = grid.get_data().map(row => ({ ...row }));
+		const data = grid.get_data();
+		const rows = data.map(row => ({ ...row }));
 		for (const editor of grid.grid_rows) {
-			const row = rows.find(row => row.name === editor.doc.name);
+			// Dialog table rows may have no name; use their actual data identity.
+			const index = data.indexOf(editor.doc);
+			const row = rows[index >= 0 ? index : data.findIndex(row =>
+				editor.doc.name ? row.name === editor.doc.name : row.idx === editor.doc.idx)];
 			if (!row) continue;
 			for (const fieldname of ["mode_of_payment", "amount", "reference_no", "confirmed"]) {
 				const control = editor.on_grid_fields_dict[fieldname];

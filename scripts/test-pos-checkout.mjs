@@ -50,6 +50,14 @@ const current = payment.split_payment_rows(grid);
 assert.equal(math.allocate(301, current, modes, 2, true)[1].reference_no, "approved-ref");
 assert.equal(stale[1].confirmed, 0, "Reading active editors must not mutate the original table data");
 console.log("PASS: split payment includes active editor reference/confirmation before blur");
+const unnamed = [{ idx: 1, mode_of_payment: "Cash", amount: 38.5 },
+    { idx: 2, mode_of_payment: "Cash", amount: 38.5 }];
+const unnamedGrid = { get_data: () => unnamed, grid_rows: [{ doc: unnamed[1], on_grid_fields_dict: {
+    mode_of_payment: { get_value: () => "NAPS card" },
+    reference_no: { get_value: () => "approved-ref" }, confirmed: { get_value: () => 1 },
+} }] };
+assert.deepEqual(plain(math.allocate(77, payment.split_payment_rows(unnamedGrid), modes, 2, true)).map(row => row.amount), [38.5, 38.5]);
+console.log("PASS: unnamed dialog rows keep each editor bound to its own payment portion");
 
 // Use the native default-payment implementation: it must not overwrite a split.
 context.erpnext.payments = class {};
@@ -62,7 +70,7 @@ const doc = { currency: "MAD", grand_total: 301, rounded_total: 301, conversion_
     { doctype: "Sales Invoice Payment", name: "cash", mode_of_payment: "Cash", type: "Cash", amount: 301, default: 1 },
     { doctype: "Sales Invoice Payment", name: "card", mode_of_payment: "NAPS card", type: "Bank", amount: 0 },
 ] };
-const frm = { doc, set_default_payment: 1, cscript: {} };
+const frm = { doc, set_default_payment: 1, cscript: {}, dirty: () => {} };
 frm.cscript.calculate_outstanding_amount = update =>
     context.erpnext.taxes_and_totals.prototype.set_default_payment.call({ frm }, 301, update);
 context.frappe.model = { set_value: async (dt, name, field, value) => {
@@ -84,6 +92,29 @@ assert.equal(doc.payments[1].amount, 201);
 assert.equal(doc.payments[1].reference_no, "approved-ref");
 assert.equal(frm.set_default_payment, 0);
 console.log("PASS: native default-MOP calculation preserves the selected cash/card allocation");
+
+// A totals render must not queue writes of old amounts, and detached controls
+// must not overwrite amounts selected after that render.
+const rendered = Object.create(context.erpnext.PointOfSale.Payment.prototype);
+rendered.events = { get_frm: () => frm };
+const dom = { is: () => true, html: () => {}, find: () => dom };
+rendered.$payment_modes = dom;
+rendered.highlight_selected_mode = rendered.render_loyalty_points_payment_mode = () => {};
+let queuedWrites = 0;
+context.frappe.ui.form = { make_control: options => ({
+    df: options.df, value: options.doc.amount,
+    set_input(value) { this.value = value; }, toggle_label() {},
+    set_value() { queuedWrites++; },
+}) };
+context.frappe.utils = { escape_html: value => value };
+rendered.render_payment_mode_dom();
+const staleCashControl = rendered.cash_control;
+rendered.render_payment_mode_dom();
+staleCashControl.value = 301;
+staleCashControl.df.onchange.call(staleCashControl);
+assert.equal(queuedWrites, 0, "Rendering must not queue payment changes");
+assert.equal(doc.payments[0].amount, 100, "A detached control must not replace a selected tender");
+console.log("PASS: payment rendering and detached controls cannot overwrite the chosen allocation");
 payment.checkout_context = { confirm_external: true };
 payment.events = { get_frm: () => ({ doc: { payments: [] } }), submit_invoice: () => {
     submissions++; return new Promise(resolve => finish = resolve);
