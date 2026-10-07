@@ -25,9 +25,6 @@
  .point-of-sale-app .primary-action{background:var(--atlas-lime);color:#123e36;border-radius:10px;font-weight:700}
  .point-of-sale-app .primary-action:focus-visible{outline:3px solid var(--atlas-focus)}
  .point-of-sale-app .item-wrapper:hover{background:var(--atlas-soft)}
- .atlas-checkout-tools{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 10px}
- .atlas-checkout-tools .btn{min-height:44px;border:1px solid var(--atlas-line);border-radius:10px;font-weight:650}
- .atlas-checkout-note{font-size:13px;line-height:1.5;max-width:36rem}
  /* Wide ledgers remain scrollable, not compressed or clipped. */
  .datatable{--dt-border-color:var(--atlas-line);--dt-primary-color:var(--atlas-green);--dt-light-bg:var(--atlas-soft)}
  @media(max-width:767px){.atlas-workspace-link{margin:8px}.page-title .title-text{font-size:22px}}

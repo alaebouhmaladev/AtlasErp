@@ -123,7 +123,7 @@ def prepare_invoice(doc, method=None):
     if not amount:
         return
     # Preserve normal tax-template rows before appending the last, non-taxable tip.
-    if not doc.get("taxes"):
+    if not doc.get("taxes") and (doc.taxes_and_charges or profile.taxes_and_charges):
         from erpnext.accounts.services.taxes import TaxService
         doc.taxes_and_charges = doc.taxes_and_charges or profile.taxes_and_charges
         TaxService(doc).set_taxes()
@@ -143,8 +143,8 @@ def return_tip_account(doc, amount):
             or original.currency != doc.currency or len(rows) != 1):
         frappe.throw(_("The original sale has no refundable ATLAS tip."))
     returned = frappe.db.sql("""select coalesce(sum(atlas_tip_amount), 0) from `tabSales Invoice`
-        where docstatus=1 and is_return=1 and return_against=%s and name!=%s""",
-        (original.name, doc.name))[0][0]
+        where docstatus=1 and is_return=1 and return_against=%s and name!=%s for update""",
+        (original.name, doc.name or ""))[0][0]
     if abs(amount) + abs(flt(returned)) > flt(original.atlas_tip_amount) + 0.000001:
         frappe.throw(_("The tip refund exceeds the original sale's remaining tip."))
     return rows[0].account_head
@@ -160,7 +160,9 @@ def validate_invoice(doc, method=None):
         return
     profile = frappe.get_cached_doc("POS Profile", doc.pos_profile)
     if not doc.is_return:
-        total = flt(doc.rounded_total or doc.grand_total)
+        if any(flt(row.amount) < 0 for row in doc.payments):
+            frappe.throw(_("Sale payment amounts cannot be negative. Use a return invoice for refunds."))
+        total = flt(doc.grand_total if cint(doc.disable_rounded_total) else doc.rounded_total or doc.grand_total)
         loyalty = flt(doc.get("loyalty_amount")) / (flt(doc.conversion_rate) or 1)
         due = total - loyalty - flt(doc.write_off_amount) - flt(doc.total_advance)
         non_cash = sum(flt(row.amount) for row in doc.payments if

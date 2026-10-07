@@ -53,6 +53,9 @@ and it does not turn on these options on existing POS Profiles.
    card numbers, PINs or CVVs in a transaction-reference field.
 3. On checkout, choose the cash/card portions. Charge each card portion on the
    TPE, then enter the approved receipt reference and confirm it in ATLAS.
+   Use one tip prompt: if ATLAS includes the tip in the amount due, do not add
+   another tip on the terminal. The terminal approval must match the full card
+   portion, including its share of the tip.
 4. Complete the invoice only after approval. A decline is not a paid sale. If a
    terminal charge succeeds but invoice submission fails, retain its reference
    and reconcile/retry the invoice; do not charge the customer again.

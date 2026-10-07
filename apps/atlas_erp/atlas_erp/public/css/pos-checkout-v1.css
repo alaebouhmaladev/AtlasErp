@@ -1,0 +1,5 @@
+@media screen {
+ .atlas-checkout-tools{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 10px}
+ .atlas-checkout-tools .btn{min-height:44px;border:1px solid var(--atlas-line);border-radius:10px;font-weight:650}
+ .atlas-checkout-note{font-size:13px;line-height:1.5;max-width:36rem}
+}

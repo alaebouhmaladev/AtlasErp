@@ -25,7 +25,7 @@ doc_events = {
 update_website_context = "atlas_erp.branding.website_context"
 web_include_css = ["/assets/atlas_erp/css/theme-v3.1.css", "/assets/atlas_erp/css/web-v3.1.css"]
 web_include_js = ["/assets/atlas_erp/js/web-v3.1.js"]
-app_include_css = ["/assets/atlas_erp/css/theme-v3.1.css", "/assets/atlas_erp/css/desk-v3.1.css"]
+app_include_css = ["/assets/atlas_erp/css/theme-v3.1.css", "/assets/atlas_erp/css/desk-v3.1.css", "/assets/atlas_erp/css/pos-checkout-v1.css"]
 app_include_js = ["/assets/atlas_erp/js/brand-v3.1.js"]
 website_context = {
     "favicon": app_logo_url,

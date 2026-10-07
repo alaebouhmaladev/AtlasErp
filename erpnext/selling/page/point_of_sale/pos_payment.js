@@ -545,7 +545,7 @@ erpnext.PointOfSale.Payment = class {
 				df: {
 					label: p.mode_of_payment,
 					fieldtype: "Currency",
-					options: currency,
+					options: "currency",
 					placeholder: __("Enter {0} amount.", [__(p.mode_of_payment)]),
 					onchange: function () {
 						const current_value = frappe.model.get_value(p.doctype, p.name, "amount");
@@ -559,6 +559,7 @@ erpnext.PointOfSale.Payment = class {
 						}
 					},
 				},
+				doc: { currency },
 				parent: this.$payment_modes.find(`.${mode}.mode-of-payment-control`),
 				render_input: true,
 			});
@@ -790,17 +791,18 @@ erpnext.PointOfSale.Payment = class {
 			{ fieldname: "divide", fieldtype: "Button", label: __("Divide equally"), click: () => {
 				try {
 					dlg.fields_dict.portions.df.data = erpnext.PointOfSale.CheckoutMath.shares(due, Number(dlg.get_value("shares")), p)
-						.map(amount => ({ mode_of_payment: default_mode, amount }));
+						.map(amount => ({ mode_of_payment: default_mode, amount, currency: doc.currency }));
 					dlg.fields_dict.portions.grid.refresh();
 				} catch (error) { frappe.msgprint(__(error.message)); }
 			} },
 			{ fieldname: "portions", fieldtype: "Table", label: __("Payment portions"), in_place_edit: true,
 				data: doc.payments.filter(row => row.amount).map(row => ({ mode_of_payment: row.mode_of_payment,
-					amount: row.amount, reference_no: row.reference_no,
+					amount: row.amount, currency: doc.currency, reference_no: row.reference_no,
 					confirmed: row.atlas_external_confirmed && row.atlas_confirmed_amount === row.amount })),
 				fields: [
+					{ fieldname: "currency", fieldtype: "Data", hidden: 1, default: doc.currency },
 					{ fieldname: "mode_of_payment", fieldtype: "Select", label: __("Payment method"), options: modes.map(mode => mode.mode_of_payment), in_list_view: 1, reqd: 1 },
-					{ fieldname: "amount", fieldtype: "Currency", label: __("Amount"), options: doc.currency, in_list_view: 1, reqd: 1 },
+					{ fieldname: "amount", fieldtype: "Currency", label: __("Amount"), options: "currency", in_list_view: 1, reqd: 1 },
 					{ fieldname: "reference_no", fieldtype: "Data", label: __("Transaction reference"), in_list_view: 1 },
 					{ fieldname: "confirmed", fieldtype: "Check", label: __("External payment approved"), in_list_view: 1 },
 				] },
@@ -837,8 +839,8 @@ erpnext.PointOfSale.Payment = class {
 					dlg.set_value("amount", choice === __("No tip") ? 0 :
 						flt(Math.abs(doc.net_total) * parseFloat(choice) / 100, precision("atlas_tip_amount", doc)));
 				} },
-			{ fieldname: "amount", fieldtype: "Currency", label: doc.is_return ? __("Tip to refund") : __("Tip amount"),
-				options: doc.currency, default: Math.abs(doc.atlas_tip_amount || 0), reqd: 0,
+			{ fieldname: "amount", fieldtype: "Float", label: (doc.is_return ? __("Tip to refund") : __("Tip amount")) + ` (${doc.currency})`,
+				precision: precision("atlas_tip_amount", doc) ?? 2, default: Math.abs(doc.atlas_tip_amount || 0), reqd: 0,
 				description: __("Tips are held in the company's staff-tip account. They are not paid to staff automatically.") },
 		], primary_action_label: __("Apply"), primary_action: async ({ amount }) => {
 			if (this.events.get_frm().doc !== doc) return;
@@ -873,7 +875,8 @@ erpnext.PointOfSale.Payment = class {
 		let dlg;
 		dlg = new frappe.ui.Dialog({ title: __("Service add-ons"), fields: [
 			{ fieldname: "item", fieldtype: "Select", label: __("Service"), reqd: 1,
-				options: items.map(item => ({ value: item.item_code, label: `${item.item_name} · ${format_currency(item.rate, item.currency)}` })) },
+				default: items[0].item_code,
+				options: items.map(item => ({ value: item.item_code, label: `${frappe.utils.escape_html(item.item_name)} · ${format_currency(item.rate, item.currency)}` })) },
 		], primary_action_label: __("Add to order"), primary_action: async ({ item }) => {
 			if (this.events.get_frm().doc !== doc) return;
 			const selected = items.find(row => row.item_code === item);

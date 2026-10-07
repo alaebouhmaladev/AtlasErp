@@ -12,7 +12,7 @@ def reject(fn, message):
         fn()
     except frappe.ValidationError:
         return
-    raise AssertionError(message)
+    raise AssertionError(message() if callable(message) else message)
 
 
 def main():
@@ -28,7 +28,7 @@ def main():
     before = {dt: frappe.db.count(dt) for dt in tracked}
     try:
         from atlas_erp.pos_api import checkout
-        from erpnext.accounts.doctype.sales_invoice.sales_invoice import make_sales_return
+        from erpnext.controllers.sales_and_purchase_return import make_return_doc
         base = frappe.get_doc("POS Profile", "Street Pizza - Maarif - Demo POS")
         liability_root = frappe.db.get_value("Account", {"company": base.company, "root_type": "Liability", "is_group": 1}, "name")
         asset_root = frappe.db.get_value("Account", {"company": base.company, "root_type": "Asset", "is_group": 1}, "name")
@@ -51,7 +51,7 @@ def main():
         profile.atlas_tip_account = tip.name
         profile.atlas_service_addon_group = group.name
         profile.atlas_confirm_external_payments = 1
-        profile.set("applicable_for_users", [{"user": "Administrator", "default": 1}])
+        profile.set("applicable_for_users", [{"user": "Administrator", "default": 0}])
         profile.append("payments", {"mode_of_payment": card.name, "default": 0})
         profile.insert()
         assert checkout.context(profile.name)["tips_enabled"]
@@ -68,7 +68,7 @@ def main():
             "balance_details": [{"mode_of_payment": base.payments[0].mode_of_payment, "opening_amount": 0}]}).insert()
         opening.submit()
 
-        def invoice(tip_amount=10, cash_amount=40, card_amount=70, confirmed=True):
+        def invoice(tip_amount=10, cash_amount=40, card_amount=90, confirmed=True):
             doc = frappe.get_doc({"doctype": "Sales Invoice", "company": profile.company, "pos_profile": profile.name,
                 "customer": profile.customer, "is_pos": 1, "update_stock": 0, "disable_rounded_total": 1,
                 "posting_date": frappe.utils.today(), "atlas_tip_amount": tip_amount,
@@ -87,33 +87,46 @@ def main():
         mismatch = invoice()
         mismatch.payments[-1].atlas_confirmed_amount = 1
         reject(lambda: mismatch.insert(), "Stale terminal amount confirmation accepted")
-        excess = invoice(cash_amount=0, card_amount=111)
-        reject(lambda: excess.insert(), "Non-cash overpayment accepted")
+        excess = invoice(cash_amount=0, card_amount=131)
+        reject(lambda: excess.insert(), lambda: "Non-cash overpayment accepted: " + str({
+            "total": excess.grand_total, "rounded": excess.rounded_total,
+            "payments": [(r.mode_of_payment, r.amount) for r in excess.payments]}))
         discount = invoice()
         discount.apply_discount_on = "Grand Total"
         discount.discount_amount = 1
         reject(lambda: discount.insert(), "Tip was discounted by a grand-total discount")
+        no_tax = invoice()
+        no_tax.taxes_and_charges = None
+        no_tax.set("taxes", [])
+        checkout.prepare_invoice(no_tax)
+        assert len(no_tax.taxes) == 1 and no_tax.taxes[0].atlas_is_tip, "Tip introduced an unrelated default VAT template"
         sale = invoice().insert()
-        assert float(sale.grand_total) == 110 and float(sale.atlas_tip_amount) == 10
+        assert float(sale.grand_total) == 130 and float(sale.atlas_tip_amount) == 10
         sale.submit()
         gl = frappe.get_all("GL Entry", filters={"voucher_type": "Sales Invoice", "voucher_no": sale.name, "is_cancelled": 0},
                             fields=["account", "debit", "credit"])
         assert abs(sum(float(r.debit) - float(r.credit) for r in gl)) < .000001
         assert sum(float(r.credit) for r in gl if r.account == tip.name) == 10
-        assert sum(float(r.debit) for r in gl if r.account == bank.name) == 70
+        assert sum(float(r.debit) for r in gl if r.account == bank.name) == 90
         assert sale.payments[-1].reference_no == "STAGING-only-approved-001"
-        print("PASS: 100 service + 10 tip = 110; cash 40 + card 70; balanced native ledger credits tips to liability")
+        print("PASS: 100 service + 20 VAT + 10 tip = 130; cash 40 + card 90; balanced native ledger credits tips to liability")
 
-        refund = make_sales_return(sale.name)
+        refund = make_return_doc("Sales Invoice", sale.name)
         refund.posting_date = frappe.utils.today()
         refund.update_stock = 0
+        for row in refund.payments:
+            if row.mode_of_payment == card.name and row.amount:
+                row.reference_no = "STAGING-only-refund-001"
+                row.atlas_external_confirmed = 1
+                row.atlas_confirmed_amount = row.amount
         refund.insert()
         assert float(refund.atlas_tip_amount) == -10
         refund.submit()
         reversal = frappe.get_all("GL Entry", filters={"voucher_type": "Sales Invoice", "voucher_no": refund.name, "is_cancelled": 0},
                                   fields=["account", "debit", "credit"])
         assert sum(float(r.debit) for r in reversal if r.account == tip.name) == 10
-        over_refund = make_sales_return(sale.name)
+        over_refund = make_return_doc("Sales Invoice", sale.name)
+        over_refund.atlas_tip_amount = -1
         reject(lambda: checkout.prepare_invoice(over_refund), "Tip refunded more than once")
         print("PASS: native full refund reverses staff-tip liability; repeated tip refund is rejected")
 
