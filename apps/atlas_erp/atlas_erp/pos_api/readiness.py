@@ -50,7 +50,7 @@ def profile_in_scope(profile):
 
 def active_sessions(**filters):
     return frappe.get_all("POS Opening Entry", filters={
-        "docstatus": 1, "status": "Open", "pos_closing_entry": ["in", ["", None]], **filters
+        "docstatus": 1, "status": "Open", **filters
     }, fields=["name", "pos_profile", "company", "user", "period_start_date"],
         order_by="period_start_date desc")
 
