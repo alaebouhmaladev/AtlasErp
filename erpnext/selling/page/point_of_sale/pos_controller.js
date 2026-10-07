@@ -500,7 +500,10 @@ erpnext.PointOfSale.Controller = class {
 						});
 					});
 				},
-				add_service_item: item => this.on_cart_update({ field: "qty", value: "+1", item }),
+				add_service_item: item => {
+					this.cart.toggle_checkout_btn(true);
+					return this.on_cart_update({ field: "qty", value: "+1", item });
+				},
 			},
 		});
 	}
