@@ -29,7 +29,7 @@
         <article class="register-card" aria-labelledby="register-{{ loop.index }}">
           <div class="register-heading">
             <div><p class="eyebrow">{{ register.company | e }}</p><h2 id="register-{{ loop.index }}">{{ register.name | e }}</h2></div>
-            <span class="register-state {{ register.state }}">{{ _("Ready") if register.state == 'ready' else _("Your session is open") if register.state == 'resume' else _("In use") if register.state == 'in_use' else _("Session needs review") if register.state == 'session_conflict' else _("Setup needed") }}</span>
+            <span class="register-state {{ register.state }}">{{ _("Ready") if register.state == 'ready' else _("Your session is open") if register.state == 'resume' else _("In use") if register.state == 'in_use' else _("Session needs review") if register.state == 'session_conflict' else _("Shift needs closing") if register.state == 'needs_closing' else _("Setup needed") }}</span>
           </div>
           <dl class="register-details"><div><dt>{{ _("Currency") }}</dt><dd>{{ register.currency | e }}</dd></div><div><dt>{{ _("Price list") }}</dt><dd>{{ (register.price_list or _('Not configured')) | e }}</dd></div><div><dt>{{ _("Warehouse") }}</dt><dd>{{ (register.warehouse or _('Not configured')) | e }}</dd></div></dl>
           {% if register.session %}<p class="session-note">{{ _("Your session started") }} {{ register.session.started_at | e }}{% if register.session.href %} · <a href="{{ register.session.href | e }}">{{ _("View session") }} ↗</a>{% endif %}</p>{% endif %}
@@ -39,7 +39,7 @@
           </ul>
           {% endif %}
           <details class="register-checks"><summary>{{ _("Register checks") }} · {{ register.checks | length - register.blocker_count }}/{{ register.checks | length }}</summary><ul>{% for check in register.checks %}<li><span aria-hidden="true">{{ '✓' if check.passed else '!' }}</span><span>{{ check.label | e }}</span><span>{{ _("Ready") if check.passed else _("Needs attention") }}</span></li>{% endfor %}</ul></details>
-          <div class="register-actions">{% if register.checkout_href %}<a class="button light" href="{{ register.checkout_href | e }}">{{ _("Resume checkout") if register.state == 'resume' else _("Open checkout") }} →</a>{% else %}<p>{{ _("Resolve the checks above before opening this register.") }}</p>{% endif %}{% if register.profile_href %}<a href="{{ register.profile_href | e }}">{{ _("Register settings") }} ↗</a>{% endif %}</div>
+          <div class="register-actions">{% if register.checkout_href %}<a class="button light" href="{{ register.checkout_href | e }}">{{ _("Resume checkout") if register.state == 'resume' else _("Open checkout") }} →</a>{% elif register.closing_href %}<a class="button light" href="{{ register.closing_href | e }}">{{ _("Review shift closing") }} →</a>{% else %}<p>{{ _("Resolve the checks above before opening this register.") }}</p>{% endif %}{% if register.profile_href %}<a href="{{ register.profile_href | e }}">{{ _("Register settings") }} ↗</a>{% endif %}</div>
         </article>
       {% else %}
         <section class="register-card empty-register"><h2>{{ _("No registers available to your account") }}</h2><p>{{ _("Ask your manager to assign your cashier account to a POS profile and review your checkout permissions.") }}</p>{% if can_setup %}<a class="button light" href="/atlas-setup">{{ _("Open business setup") }} ↗</a>{% endif %}</section>

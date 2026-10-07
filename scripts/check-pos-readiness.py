@@ -58,13 +58,38 @@ def main():
         assigned_profile.name = profile.name
         assigned_profile.set("applicable_for_users", [{"user": "Administrator", "default": 1}])
         own = frappe._dict(name="read-only-fixture", user="Administrator", company=profile.company,
-                           pos_profile=profile.name, period_start_date="2026-10-07 09:00:00")
+                           pos_profile=profile.name, period_start_date=frappe.utils.now_datetime())
         with patch("atlas_erp.pos_api.readiness.active_sessions", return_value=[]):
             ready = inspect_register(assigned_profile, [])
         assert ready["state"] == "ready", ready
         with patch("atlas_erp.pos_api.readiness.active_sessions", return_value=[own]):
             resumed = inspect_register(assigned_profile, [own])
         assert resumed["state"] == "resume" and resumed["checkout_href"]
+        for days in (-1, 1):
+            dated = frappe._dict(own)
+            dated.period_start_date = frappe.utils.add_to_date(own.period_start_date, days=days)
+            with patch("atlas_erp.pos_api.readiness.active_sessions", return_value=[dated]):
+                stale = inspect_register(assigned_profile, [dated])
+            assert stale["state"] == "needs_closing" and not stale["checkout_href"]
+            assert any(c["code"] == "session_date" and c["blocking"] for c in stale["checks"])
+            assert "pos_opening_entry=read-only-fixture" in stale["closing_href"]
+            original_get_doc = frappe.get_doc
+            def selected_profile(*args, **kwargs):
+                if args[:2] == ("POS Profile", profile.name):
+                    return assigned_profile
+                return original_get_doc(*args, **kwargs)
+            with patch("atlas_erp.pos_api.readiness.active_sessions", return_value=[dated]), patch(
+                    "frappe.get_doc", side_effect=selected_profile):
+                try:
+                    register_context(profile.name)
+                except frappe.ValidationError:
+                    pass
+                else:
+                    raise AssertionError("Outdated shift must not reach checkout through the context API")
+            with patch("atlas_erp.pos_api.readiness.active_sessions", return_value=[dated]), patch(
+                    "frappe.has_permission", return_value=False):
+                restricted = inspect_register(assigned_profile, [dated])
+            assert restricted["closing_href"] is None
         other = frappe._dict(own)
         other.user = "another-cashier@example.invalid"
         with patch("atlas_erp.pos_api.readiness.active_sessions", return_value=[other]):
@@ -114,7 +139,7 @@ def main():
             frappe.set_user("Administrator")
             frappe.db.rollback()
         assert counts == {dt: frappe.db.count(dt) for dt in counts}
-        print("PASS: register checks, missing cash mapping, own-session resume, busy/conflicting sessions, guest denial; no business records posted")
+        print("PASS: register checks, missing cash mapping, current-day resume, old/future shift blocking and scoped closing link, busy/conflicting sessions, guest denial; no business records posted")
         if temporary_users:
             print("PASS: website/unassigned/assigned native users and ATLAS branch/company denials; fixtures rolled back")
     finally:

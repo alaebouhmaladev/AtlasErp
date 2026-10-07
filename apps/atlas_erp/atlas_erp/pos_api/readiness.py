@@ -1,5 +1,5 @@
 """Read-only register checks; never open, cancel or post a cashier session."""
-from urllib.parse import quote
+from urllib.parse import quote, urlencode
 
 import frappe
 from frappe import _
@@ -119,10 +119,14 @@ def inspect_register(profile, own_sessions=None):
     multiple = len(own_sessions) > 1 or len(register_sessions) > 1
     other_register = any(s.pos_profile != profile.name for s in own_sessions)
     other_cashier = any(s.user != user for s in register_sessions)
+    current_day = all(frappe.utils.get_date_str(s.period_start_date) == frappe.utils.today()
+                      for s in own_here)
     add("session", _("Cashier session"), not (multiple or other_register or other_cashier),
         _("Multiple open sessions need a manager's review.") if multiple else
         _("Finish your session at the other register before opening this one.") if other_register else
         _("Another cashier has this register open. Ask your manager to arrange closing or handover."))
+    add("session_date", _("Shift date"), current_day,
+        _("This shift started on another day. The current checkout requires a shift opened today. Review and close this shift before starting a new one."))
 
     blockers = sum(c["blocking"] for c in checks)
     state = "needs_setup" if blockers else "resume" if own_here else "ready"
@@ -130,12 +134,24 @@ def inspect_register(profile, own_sessions=None):
         state = "in_use"
     elif multiple or other_register:
         state = "session_conflict"
+    elif not current_day:
+        state = "needs_closing"
     checkout_href = "/desk/point-of-sale?atlas_profile=" + quote(profile.name, safe="") if not blockers else None
     session = own_here[0] if len(own_here) == 1 else None
+    closing_href = None
+    if (session and state == "needs_closing" and desk_link("POS Opening Entry", session.name)
+            and frappe.has_permission("POS Closing Entry", "read")
+            and frappe.has_permission("POS Closing Entry", "create")):
+        # Opens an unsaved native form; closing count and submission remain user actions.
+        closing_href = "/desk/pos-closing-entry/new-pos-closing-entry?" + urlencode({
+            "pos_opening_entry": session.name, "company": profile.company,
+            "pos_profile": profile.name, "user": user,
+            "period_start_date": str(session.period_start_date)
+        })
     return {"name": profile.name, "company": profile.company, "currency": profile.currency,
             "warehouse": profile.warehouse, "price_list": profile.selling_price_list,
             "state": state, "blocker_count": blockers, "checks": checks,
-            "checkout_href": checkout_href, "profile_href": profile_href,
+            "checkout_href": checkout_href, "profile_href": profile_href, "closing_href": closing_href,
             "session": {"name": session.name, "started_at": str(session.period_start_date),
                         "href": desk_link("POS Opening Entry", session.name)} if session else None}
 
