@@ -1,5 +1,11 @@
 # Small development backlog
 
+Current breadth target: [Square capability benchmark](SQUARE_BENCHMARK.md), with
+50 capability areas, seven gated releases and detailed small tickets. The first
+implemented slice is MOB-01A register readiness; POS-01A–C operational register
+configuration/native API scopes and the Android app follow. Readiness does not
+complete register provisioning, safe concurrent opening or offline cash.
+
 Status: **Business setup, shared theme, customer entry pages, demo catalog and HR/CRM applications deployed (ATLASERP 0.4.0)**.
 The company/brand/branch/team implementation is documented in `ONBOARDING.md`.
 The Street Pizza development dataset includes 63 items and a configured cash POS

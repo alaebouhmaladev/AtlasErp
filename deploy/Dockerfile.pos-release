@@ -4,4 +4,6 @@ FROM ${BASE_IMAGE}
 COPY --chown=frappe:frappe erpnext/selling/page/point_of_sale/pos_controller.js apps/erpnext/erpnext/selling/page/point_of_sale/pos_controller.js
 COPY --chown=frappe:frappe erpnext/accounts/doctype/sales_invoice/services/pos.py apps/erpnext/erpnext/accounts/doctype/sales_invoice/services/pos.py
 COPY --chown=frappe:frappe scripts apps/erpnext/scripts
+COPY --chown=frappe:frappe apps/atlas_erp apps/atlas_erp
+RUN ./env/bin/pip install --no-cache-dir --no-deps --editable ./apps/atlas_erp
 RUN bench build --apps erpnext && cp sites/assets/assets.json pos-assets.json

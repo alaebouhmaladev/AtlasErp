@@ -20,6 +20,12 @@ and visible status text. Keep checkout, products, stock, purchasing and daily
 closing close to the retail user. Show advanced finance tools by role rather
 than overwhelming every cashier with the whole ERP.
 
+`/atlas-pos` is the 0.4.1 register entry. It shows a register's company, currency,
+price list, warehouse, setup blockers and own/busy/conflicting session state.
+Authorized setup links and a refreshed server-checked native handoff guide online
+checkout. It is not an offline tablet app; cashiers cannot open an unavailable
+register from this page, and the page never submits/cancels a session itself.
+
 The launchpad has responsive cards, keyboard focus, a skip link and RTL layout
 support. Next passes need French/Arabic translations, real screen-reader and
 tablet verification, and dedicated phone behavior. RTL layout alone does not

@@ -1,5 +1,10 @@
 # Product roadmap
 
+The expanded Square capability benchmark, 50-area gap register and small release
+tickets are in [SQUARE_BENCHMARK.md](SQUARE_BENCHMARK.md). It is the current breadth
+target; existing mobile/POS tickets remain the implementation sequence. Banking
+and electronic payments have separate country/provider dependencies.
+
 The long-term system can serve many industries. The first complete product serves
 **Moroccan retail shops and restaurants**, with Android tablets as the first native
 POS target and iOS following later. It extends through tested industry and country packs.

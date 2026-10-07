@@ -12,19 +12,49 @@ erpnext.PointOfSale.Controller = class {
 		});
 	}
 
-	check_opening_entry() {
+	async fetch_register_context() {
+		const requested_profile = new URLSearchParams(window.location.search).get("atlas_profile");
+		if (!requested_profile) return null;
+		try {
+			const response = await frappe.call({
+				method: "atlas_erp.pos_api.readiness.register_context",
+				args: { pos_profile: requested_profile },
+				type: "GET",
+			});
+			if (!response.message?.company || response.message.pos_profile !== requested_profile) {
+				throw new Error("Register context unavailable");
+			}
+			return response.message;
+		} catch (error) {
+			return false;
+		}
+	}
+
+	async check_opening_entry() {
+		const register_context = await this.fetch_register_context();
+		if (register_context === false) return;
 		this.fetch_opening_entry().then((r) => {
 			if (r.message.length) {
+				if (register_context && (r.message.length !== 1 ||
+					r.message[0].pos_profile !== register_context.pos_profile ||
+					r.message[0].company !== register_context.company)) {
+					frappe.msgprint(__("Your cashier session changed. Return to ATLAS POS and refresh the register checks."));
+					return;
+				}
 				// assuming only one opening voucher is available for the current user
 				this.prepare_app_defaults(r.message[0]);
 			} else {
-				this.create_opening_voucher();
+				this.create_opening_voucher(register_context);
 			}
 		});
 	}
 
-	create_opening_voucher() {
+	async create_opening_voucher(register_context) {
 		const me = this;
+		// ATLAS handoff rechecks assignment/setup on the server. Never trust a
+		// company supplied in the URL or mutate the user's global company defaults.
+		if (register_context === undefined) register_context = await this.fetch_register_context();
+		if (register_context === false) return;
 		const table_fields = [
 			{
 				fieldname: "mode_of_payment",
@@ -61,7 +91,7 @@ erpnext.PointOfSale.Controller = class {
 				{
 					fieldtype: "Link",
 					label: __("Company"),
-					default: frappe.defaults.get_default("company"),
+					default: register_context?.company || frappe.defaults.get_default("company"),
 					options: "Company",
 					fieldname: "company",
 					reqd: 1,
@@ -71,6 +101,7 @@ erpnext.PointOfSale.Controller = class {
 					label: __("POS Profile"),
 					options: "POS Profile",
 					fieldname: "pos_profile",
+					default: register_context?.pos_profile,
 					reqd: 1,
 					get_query: () => pos_profile_query(),
 					onchange: () => fetch_pos_payment_methods(),
@@ -109,13 +140,14 @@ erpnext.PointOfSale.Controller = class {
 			},
 			primary_action_label: __("Submit"),
 		});
-		dialog.show();
 		const pos_profile_query = () => {
 			return {
 				query: "erpnext.accounts.doctype.pos_profile.pos_profile.pos_profile_query",
 				filters: { company: dialog.fields_dict.company.get_value() },
 			};
 		};
+		dialog.show();
+		if (register_context) fetch_pos_payment_methods();
 	}
 
 	async prepare_app_defaults(data) {

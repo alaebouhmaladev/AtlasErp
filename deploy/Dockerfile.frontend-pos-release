@@ -4,4 +4,6 @@ FROM ${ATLAS_IMAGE} AS assets
 
 FROM ${BASE_FRONTEND}
 COPY --from=assets /home/frappe/frappe-bench/apps/erpnext/erpnext/public/dist/ /srv/assets/erpnext/dist/
+COPY apps/atlas_erp/atlas_erp/public/ /srv/assets/atlas_erp/
 RUN chmod -R a+rX /srv/assets/erpnext/dist
+RUN chmod -R a+rX /srv/assets/atlas_erp

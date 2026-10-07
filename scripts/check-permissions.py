@@ -31,7 +31,7 @@ def main():
         frappe.set_user("Administrator")
         admin_context = get_context(frappe._dict())
         assert admin_context.can_setup
-        assert any(module["href"] == "/desk/point-of-sale" for module in admin_context.modules)
+        assert any(module["href"] == "/atlas-pos" for module in admin_context.modules)
 
         for user_type, roles in [("Website User", []), ("System User", ["Sales User"])]:
             frappe.set_user("Administrator")

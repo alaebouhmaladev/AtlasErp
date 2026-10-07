@@ -25,6 +25,7 @@ website_context = {
     "splash_image": "/assets/atlas_erp/images/atlas-wordmark.svg",
 }
 website_route_rules = [
+    {"from_route": "/atlas-pos", "to_route": "atlas_pos"},
     {"from_route": "/atlas-portal", "to_route": "atlas_portal"},
     {"from_route": "/atlas-menu", "to_route": "atlas_menu"},
     {"from_route": "/atlas-setup", "to_route": "atlas_setup"},

@@ -49,7 +49,7 @@ def get_context(context):
             context.modules.append({
                 "title": title,
                 "description": description,
-                "href": f"/desk/{route}",
+                "href": "/atlas-pos" if route == "point-of-sale" else f"/desk/{route}",
                 "new_href": f"/desk/{route}/new" if action and frappe.has_permission(doctype, "create") else None,
                 "action": action,
             })

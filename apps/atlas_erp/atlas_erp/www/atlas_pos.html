@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="{{ frappe.lang }}" dir="{{ 'rtl' if frappe.lang == 'ar' else 'ltr' }}">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ _("Point of sale") }} · ATLASERP</title>
+  <link rel="icon" href="/assets/atlas_erp/images/atlas-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/atlas_erp/css/atlas.css">
+  <link rel="stylesheet" href="/assets/atlas_erp/css/pos-readiness-v1.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">{{ _("Skip to content") }}</a>
+  <aside class="sidebar" aria-label="{{ _('Main navigation') }}">
+    <a class="brand" href="/atlas"><img src="/assets/atlas_erp/images/atlas-mark.svg" alt="" width="38" height="38">ATLAS<span>ERP</span></a>
+    <p class="nav-label">{{ _("YOUR SHOP") }}</p>
+    <a class="nav-item" href="/atlas">{{ _("Business workspace") }}</a>
+    <a class="nav-item active" href="/atlas-pos" aria-current="page">{{ _("Point of sale") }}</a>
+    {% if can_setup %}<a class="nav-item" href="/atlas-setup">{{ _("Business & team") }}</a>{% endif %}
+    <div class="sidebar-footer"><a href="/atlas-guide">{{ _("Getting started") }} ↗</a></div>
+  </aside>
+  <main id="main">
+    <header class="topbar"><span>{{ _("Point of sale") }}</span><a href="/desk/user-profile">{{ display_name | e }}</a></header>
+    <div class="content">
+      <p class="eyebrow">{{ _("ATLAS POS") }}</p>
+      <h1>{{ _("Ready for your next customer.") }}</h1>
+      <p class="intro">{{ _("Choose your register. Check its setup, then open or resume your cashier session.") }}</p>
+      <div class="pos-notice"><span class="pos-dot" aria-hidden="true"></span><p>{{ _("Online checkout · Internet connection required") }}</p><a href="/atlas-pos">{{ _("Refresh checks") }} ↻</a></div>
+      <div class="register-grid">
+      {% for register in registers %}
+        <article class="register-card" aria-labelledby="register-{{ loop.index }}">
+          <div class="register-heading">
+            <div><p class="eyebrow">{{ register.company | e }}</p><h2 id="register-{{ loop.index }}">{{ register.name | e }}</h2></div>
+            <span class="register-state {{ register.state }}">{{ _("Ready") if register.state == 'ready' else _("Your session is open") if register.state == 'resume' else _("In use") if register.state == 'in_use' else _("Session needs review") if register.state == 'session_conflict' else _("Setup needed") }}</span>
+          </div>
+          <dl class="register-details"><div><dt>{{ _("Currency") }}</dt><dd>{{ register.currency | e }}</dd></div><div><dt>{{ _("Price list") }}</dt><dd>{{ (register.price_list or _('Not configured')) | e }}</dd></div><div><dt>{{ _("Warehouse") }}</dt><dd>{{ (register.warehouse or _('Not configured')) | e }}</dd></div></dl>
+          {% if register.session %}<p class="session-note">{{ _("Your session started") }} {{ register.session.started_at | e }}{% if register.session.href %} · <a href="{{ register.session.href | e }}">{{ _("View session") }} ↗</a>{% endif %}</p>{% endif %}
+          {% if register.blocker_count %}
+          <ul class="setup-issues">
+          {% for check in register.checks if check.blocking %}<li><strong>{{ check.label | e }}</strong><p>{{ check.message }}</p>{% if check.href %}<a href="{{ check.href | e }}">{{ _("Review setup") }} ↗</a>{% endif %}</li>{% endfor %}
+          </ul>
+          {% endif %}
+          <details class="register-checks" {% if not register.blocker_count %}open{% endif %}><summary>{{ _("Register checks") }} · {{ register.checks | length - register.blocker_count }}/{{ register.checks | length }}</summary><ul>{% for check in register.checks %}<li><span aria-hidden="true">{{ '✓' if check.passed else '!' }}</span><span>{{ check.label | e }}</span><span>{{ _("Ready") if check.passed else _("Needs attention") }}</span></li>{% endfor %}</ul></details>
+          <div class="register-actions">{% if register.checkout_href %}<a class="button light" href="{{ register.checkout_href | e }}">{{ _("Resume checkout") if register.state == 'resume' else _("Open checkout") }} →</a>{% else %}<p>{{ _("Resolve the checks above before opening this register.") }}</p>{% endif %}{% if register.profile_href %}<a href="{{ register.profile_href | e }}">{{ _("Register settings") }} ↗</a>{% endif %}</div>
+        </article>
+      {% else %}
+        <section class="register-card empty-register"><h2>{{ _("No registers available to your account") }}</h2><p>{{ _("Ask your manager to assign your cashier account to a POS profile and review your checkout permissions.") }}</p>{% if can_setup %}<a class="button light" href="/atlas-setup">{{ _("Open business setup") }} ↗</a>{% endif %}</section>
+      {% endfor %}
+      </div>
+      <p class="foundation-note">{{ _("Each physical till has its own register. A register already used by another cashier needs closing or a manager handover before a new session can begin.") }}</p>
+    </div>
+  </main>
+</body>
+</html>

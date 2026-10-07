@@ -122,8 +122,12 @@ coordination and outage checks are also required before commercial use.
 | LAN-01–LAN-07 | Shared-router device coordination | Complete the local-network tasks below before claiming offline shared restaurant operation |
 | REST-01 onward | Unpaid table orders → kitchen → shared settlement | Build on the local hub and continue POS_WORKFLOW.md, then add transfer/split-bill cases |
 
-The immediate next implementation slice is **MOB-01/MOB-02**, then authenticated
-catalog loading. Do not describe a cart mockup or unconnected APK as a working POS.
+MOB-01A's read-only web register readiness and native handoff are implemented in
+0.4.1. Its checks do not complete native endpoint guards, safe concurrent opening
+or register provisioning. Next: **POS-01A–C and MOB-02–04**, then the transaction
+and offline path. [SQUARE_BENCHMARK.md](SQUARE_BENCHMARK.md) expands the platform
+scope without duplicating these tickets. Do not describe a cart mockup or
+unconnected APK as a working POS.
 
 ## Prevent the setup failures already observed
 
