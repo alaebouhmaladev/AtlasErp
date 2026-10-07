@@ -813,11 +813,14 @@ erpnext.PointOfSale.Payment = class {
 			try {
 				const allocation = erpnext.PointOfSale.CheckoutMath.allocate(due,
 					this.split_payment_rows(dlg.fields_dict.portions.grid), modes, p, confirm);
+				// The operator has chosen tenders; native default-MOP logic must
+				// no longer replace that allocation with the entire amount in Cash.
+				this.events.get_frm().set_default_payment = 0;
 				for (const row of doc.payments) {
 					const value = allocation.find(value => value.mode_of_payment === row.mode_of_payment);
 					await frappe.model.set_value(row.doctype, row.name, value);
 				}
-				this.events.get_frm().cscript.calculate_outstanding_amount();
+				this.events.get_frm().cscript.calculate_outstanding_amount(false);
 				this.render_payment_mode_dom(); this.update_totals_section();
 				dlg.hide();
 			} catch (error) { frappe.msgprint(__(error.message)); }

@@ -50,6 +50,40 @@ const current = payment.split_payment_rows(grid);
 assert.equal(math.allocate(301, current, modes, 2, true)[1].reference_no, "approved-ref");
 assert.equal(stale[1].confirmed, 0, "Reading active editors must not mutate the original table data");
 console.log("PASS: split payment includes active editor reference/confirmation before blur");
+
+// Use the native default-payment implementation: it must not overwrite a split.
+context.erpnext.payments = class {};
+context.precision = () => 2;
+context.format_currency = value => String(value);
+context.$ = { each: (rows, callback) => rows.forEach((row, i) => callback(i, row)) };
+vm.runInNewContext(readFileSync(new URL("../erpnext/public/js/controllers/taxes_and_totals.js", import.meta.url), "utf8"), context);
+const doc = { currency: "MAD", grand_total: 301, rounded_total: 301, conversion_rate: 1,
+    is_pos: 1, party_account_currency: "MAD", payments: [
+    { doctype: "Sales Invoice Payment", name: "cash", mode_of_payment: "Cash", type: "Cash", amount: 301, default: 1 },
+    { doctype: "Sales Invoice Payment", name: "card", mode_of_payment: "NAPS card", type: "Bank", amount: 0 },
+] };
+const frm = { doc, set_default_payment: 1, cscript: {} };
+frm.cscript.calculate_outstanding_amount = update =>
+    context.erpnext.taxes_and_totals.prototype.set_default_payment.call({ frm }, 301, update);
+context.frappe.model = { set_value: async (dt, name, field, value) => {
+    const row = doc.payments.find(row => row.name === name);
+    if (typeof field === "object") Object.assign(row, field); else row[field] = value;
+} };
+let splitOptions;
+context.frappe.ui = { Dialog: class {
+    constructor(options) { splitOptions = options; this.fields_dict = { portions: { grid } }; }
+    show() {} hide() {}
+} };
+payment.events = { get_frm: () => frm };
+payment.checkout_context = { confirm_external: true };
+payment.render_payment_mode_dom = payment.update_totals_section = () => {};
+payment.show_split_payment();
+await splitOptions.primary_action({});
+assert.equal(doc.payments[0].amount, 100);
+assert.equal(doc.payments[1].amount, 201);
+assert.equal(doc.payments[1].reference_no, "approved-ref");
+assert.equal(frm.set_default_payment, 0);
+console.log("PASS: native default-MOP calculation preserves the selected cash/card allocation");
 payment.checkout_context = { confirm_external: true };
 payment.events = { get_frm: () => ({ doc: { payments: [] } }), submit_invoice: () => {
     submissions++; return new Promise(resolve => finish = resolve);
