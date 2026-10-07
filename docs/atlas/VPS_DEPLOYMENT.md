@@ -6,16 +6,47 @@
 - Server: Debian 12 at `85.190.254.196`; deployment uses the existing `alaebhm`
   SSH account and Docker access.
 - Checkout: `/home/alaebhm/atlaserp/source`, GitHub `origin/dev`.
-- Release source: `f61a96d850`; subsequent deployment notes are documentation only.
-- App image: `atlaserp:f61a96d850`.
-- Frontend image: `atlaserp-frontend:f61a96d850`.
+- Release source: `d71e1f431b`; subsequent deployment notes are documentation only.
+- App image: `atlaserp:d71e1f431b`.
+- Frontend image: `atlaserp-frontend:d71e1f431b`.
 - Frappe source: `459a849fa6e97510d00f260022419bfd03ca75d4`.
-- Engine/extension: ERPNext 17 development / ATLASERP 0.4.1.
+- Engine/extension: ERPNext 17 development / ATLASERP 0.4.2.
 - Installed packages: Frappe, ERPNext, ATLAS extension, HRMS, WhatsApp and CRM.
 - Application OCI image index identity:
-  `sha256:3995e479333beeb46ad2a34e1f966368fed47554d7dbaba53b9255f6fe1fde57`.
+  `sha256:6b1403f3417f0e557d8782983c06279f590caa1bc56a308284d74627072f8e2f`.
 - Frontend OCI image index identity:
-  `sha256:7d20404b7af4cf03d7254e840f2c46a2c72835b1e4b8d0b86074104cb2362a95`.
+  `sha256:13756eefda49e65a889d5ed8103ff199efc94e53ff433524fd2a11c86dcdf7e6`.
+
+## Shift date guidance — 0.4.2
+
+The engine rejects sales against an opening whose date differs from today in the
+site timezone. Version 0.4.1 omitted this from readiness, so it could advertise
+Resume while native invoice validation rejected the old shift. Version 0.4.2
+adds the date check and an authorized unsaved closing-form link for the shift
+owner. It preserves the engine's date validation. Overnight restaurant policy
+is planned separately in POS-01D.
+
+Staging passed current-day resume, old/future date rejection through the context
+API, closing-link permission checks, existing assignment/scope fixtures and HTTP
+gates. The native form URL was browser-verified against the existing Street Pizza
+opening: correct company/profile/cashier, one 301 MAD sale and 1,801 MAD expected
+cash. The browser form was never saved or submitted. The user explicitly chose
+to keep this opening unchanged; no financial closing or cancellation was performed.
+
+Images use the extension-only `deploy/Dockerfile.release` and
+`deploy/Dockerfile.frontend-release` recipes. The final build inherits intermediate
+`46d2d5b140` images on the previous `f61a96d850` runtime. The ERP/POS engine,
+HR/CRM packages and POS bundle `5ER4GZUT` remain unchanged. No schema migration is
+required. The prior environment is saved privately as
+`.env.before-shift-date-d71e1f431b`; reverting that environment and runtime image
+pair plus clearing site cache reverses this guidance-only update.
+
+The full backup completed before rollout:
+`20261007_014638-erp_atlasuse_site-*`. Live HTTPS and read-only readiness checks
+passed. Private before/after document checksums and business record counts match:
+the opening is still submitted/Open and the 301 MAD invoice is still submitted.
+No closing entry was created. The live browser shows the old-shift explanation.
+All application services run the `d71e1f431b` pair; database and Redis were retained.
 
 ## POS entry release — 0.4.1
 
@@ -30,8 +61,9 @@ Street Pizza register, MAD opening amount and Change register navigation without
 submitting an opening. Entry layout checks passed at 1024×768 and 390×844.
 
 Live HTTPS guest/authentication/API/assets checks passed, as did both invoice
-type/company/account regressions and the existing cashier's resumable Street
-Pizza context with MAD. HRMS and CRM HTML/built assets, authenticated realtime
+type/company/account regressions and the existing cashier's register context
+with MAD. That readiness context reported Resume; the missing shift-date guard
+was subsequently discovered and repaired in 0.4.2. HRMS and CRM HTML/built assets, authenticated realtime
 WebSocket/polling and foreign/missing cross-site origin rejection also passed.
 The browser confirmed the live register page; Administrator correctly sees the
 Street Pizza shift owned by the existing cashier as In use. No assignment or

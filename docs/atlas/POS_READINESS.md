@@ -1,4 +1,4 @@
-# ATLAS POS register entry — 0.4.1
+# ATLAS POS register entry — 0.4.2
 
 The first Square benchmark delivery is a guided **online** register entry screen
 at `/atlas-pos`. It improves the existing ERP checkout; it is not an Android
@@ -11,7 +11,7 @@ register-readiness milestone in [MOBILE_POS.md](MOBILE_POS.md).
    [ATLAS POS](https://erp.atlasuse.site/atlas-pos).
 2. Choose the register for the correct company and branch warehouse.
 3. **Open checkout** starts the native opening dialog. **Resume checkout** opens
-   the cashier's existing session. Neither link posts an opening balance or sale.
+   the cashier's existing current-day session. Neither link posts an opening balance or sale.
 4. Check the opening float, then submit it yourself when starting a shift.
    In the ATLAS handoff, company and profile stay fixed; **Change register**
    returns to register selection. Opening amounts use the company's accounting
@@ -21,17 +21,31 @@ A register used by another cashier requires normal closing or manager handover.
 The entry page explains this and never cancels somebody's session. Multiple open
 sessions and a cashier already using a different register require review.
 
-For the current Street Pizza demo, the existing ATLAS cashier account
-`alae@atlasbites-maroc.com` has a resumable shift. Administrator sees **In use**
-while that other account owns the shift. Sign in with the assigned cashier to
-resume it; changing accounts does not transfer ownership of an opening entry.
+The engine currently requires an opening dated today in the site's timezone.
+Version 0.4.2 checks this before offering checkout: an old or future-dated shift
+blocks resume and shows **Shift needs closing** for its owner. An authorized
+operator can choose **Review shift closing**, which opens an unsaved native form
+for that opening, company/profile and cashier. It does not save or submit it.
+Review linked sales and enter the actual counted cash before submitting yourself.
+Operators without opening-read and closing-read/create access get no closing link.
+
+The current Street Pizza demo shift `POS-OPE-2026-00002`, owned by
+`alae@atlasbites-maroc.com`, opened on 6 October at 21:32. It contains one submitted
+301 MAD sale and 1,500 MAD opening cash; expected cash is 1,801 MAD. On 7 October
+the user explicitly chose to keep the shift unchanged. It remains open and its
+sale is preserved. Administrator sees **In use** while the cashier owns it.
+Changing accounts does not transfer ownership of an opening entry.
+
+Restaurant overnight shifts need a separately specified business-day policy and
+matching invoice validation. This fix follows the existing engine date rule; it
+does not bypass it, alter posting dates or automatically close a shift at midnight.
 
 ## Checks and access
 
 The screen checks profile enablement, explicit cashier assignment, native opening
 and invoice create/submit permissions, company warehouse, enabled selling price
 list, configured currency, exactly one default tender, each tender's enabled
-company Cash/Bank account, the cash change account and open sessions.
+company Cash/Bank account, the cash change account, open sessions and their dates.
 
 Guests, Website Users and disabled accounts are rejected. Non-administrators need
 native POS Profile record access and explicit cashier assignment. Accounts using
@@ -56,7 +70,8 @@ or another cashier's session will not change before the user submits.
   handoff, changed-session guard, constructor-time Link lookup, fixed register and
   opening currency/amount payload.
 - `scripts/check-pos-readiness.py`: read-only checks, missing payment mapping,
-  own-session resume, busy/conflicting sessions and guest denial. Optional staging
+  current-day resume, old/future shift rejection through the context API, scoped
+  closing links, busy/conflicting sessions and guest denial. Optional staging
   fixtures test Website User, unassigned/assigned native users and wrong ATLAS
   scopes; writes are rolled back and caches cleared.
 - `scripts/check-pos-readiness-http.py`: guest gates, authenticated HTML/API/CSS

@@ -13,14 +13,14 @@ No printer model, payment processor or router host is assumed.
 
 ## What exists today
 
-ATLASERP 0.4.1 retains the ATLAS workspace/theme, company/brand/branch/team metadata,
+ATLASERP 0.4.2 retains the ATLAS workspace/theme, company/brand/branch/team metadata,
 Street Pizza's 63-item demo menu, native ERP checkout, stock/accounting engine,
 customer entry pages and installed HRMS/CRM applications. Menu preview is
 read-only. Native ERP features are reusable building blocks: their availability
 does not mean the corresponding ATLAS tablet, offline or restaurant workflow is
 complete. Generic ERP API permissions still need an operational scope audit.
 
-The first implementation against this benchmark is **0.4.1 register readiness**
+The first implementation against this benchmark is **0.4.2 register readiness**
 ([cashier guide and verification](POS_READINESS.md)):
 `/atlas-pos` checks the authenticated operator's accessible registers, cashier
 assignment, invoice/opening permissions, warehouse, price list, payment mapping,
@@ -70,7 +70,7 @@ authoritative; avoid creating duplicate implementations for the same capability.
 | ID | Capability / ATLAS acceptance target | Present base / gap | Release |
 | --- | --- | --- | --- |
 | SQ-01 | Guided legal company → brand → branch → register → cashier setup; re-opening setup preserves progress | Delivered business metadata; Build register provisioning | 1 |
-| SQ-02 | Cashier register readiness, correct company, resume own session and explain busy register | Delivered 0.4.1 preflight; opening concurrency/guarding pending | 1 |
+| SQ-02 | Cashier register readiness, correct company, resume current-day session and explain busy/old shifts | Delivered 0.4.2 preflight; overnight policy and opening concurrency/guarding pending | 1 |
 | SQ-03 | Touch favorites, categories, photos, barcode/search, quantity/UOM and accessible tablet cart | Engine catalog/native POS; Build Android experience | 2 |
 | SQ-04 | Variants, sizes, bundles and required/optional modifiers with min/max choices and price deltas | Engine variants/prices; Build restaurant selection contract | 2 |
 | SQ-05 | Hold, name, recall, edit and recover unpaid carts; committed orders retain revisions | Build durable cart/order store | 2–4 |
@@ -196,10 +196,11 @@ translation/touch states where relevant and a concise record of evidence.
 
 | Ticket | Small deliverable | Acceptance / dependencies |
 | --- | --- | --- |
-| MOB-01A | Read-only readiness page and verified native handoff | 0.4.1: assigned profiles, account errors, own/busy/conflicting session states, guest/website/scope denials; never submits financial documents |
+| MOB-01A | Read-only readiness page and verified native handoff | 0.4.2: assigned profiles, account errors, current/busy/conflicting/old shift states, scoped unsaved closing link, guest/website/scope denials; never submits financial documents |
 | POS-01A | Explicit branch/register mapping and guided profile creation | Bind one profile to one branch/till; valid warehouse/price/account/cashiers; repeated setup does not duplicate |
 | POS-01B | Scope native POS reads/search/profile APIs | Cashier cannot read arbitrary profiles/accounts/customer history; negative direct API cases |
 | POS-01C | Scope opening/invoice/return/closing writes | Validate actual operator/company/branch/register for both native invoice modes; forged or disabled staff denied |
+| POS-01D | Restaurant overnight shift/business-day policy | Specify local timezone/cutoff and maximum shift rules; align entry and invoice validation; test midnight, returns, reporting and closing without changing recorded sale dates |
 | Q02 | Automated protected backups and restore rehearsal | Restore DB/files/config/keys on isolated site; recovery steps proven before commercial pilot |
 | MA-01 | Reviewed Morocco shop/receipt examples | Obtain legal identifiers, accountant-approved tax cases and cash/return receipt examples; no inferred tax-rate defaults |
 | MOB-02–03 | Pinned Android app, enrollment and protected credentials | Named device installs; revocation and French/Arabic layout; no embedded admin key |
