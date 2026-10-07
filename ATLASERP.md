@@ -69,6 +69,8 @@ server processes are intentional. Production deployment has its own roadmap gate
 5. [Morocco research and African country packs](docs/atlas/LOCALIZATION.md)
 6. [Local setup verification and known limits](docs/atlas/SETUP_LOG.md)
 7. [ATLASERP branding](docs/atlas/BRANDING.md)
+8. [Square capability benchmark and seven delivery releases](docs/atlas/SQUARE_BENCHMARK.md)
+9. [Delivered POS register entry and cashier guide](docs/atlas/POS_READINESS.md)
 
 Keep one small workflow in development at a time. Every completed ticket needs a
 demonstrable outcome, appropriate verification and updated notes before the next.

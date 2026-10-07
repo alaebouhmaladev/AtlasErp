@@ -6,16 +6,66 @@
 - Server: Debian 12 at `85.190.254.196`; deployment uses the existing `alaebhm`
   SSH account and Docker access.
 - Checkout: `/home/alaebhm/atlaserp/source`, GitHub `origin/dev`.
-- Release source: `cbc6600c94`; subsequent deployment notes are documentation only.
-- App image: `atlaserp:cbc6600c94`.
-- Frontend image: `atlaserp-frontend:cbc6600c94`.
+- Release source: `f61a96d850`; subsequent deployment notes are documentation only.
+- App image: `atlaserp:f61a96d850`.
+- Frontend image: `atlaserp-frontend:f61a96d850`.
 - Frappe source: `459a849fa6e97510d00f260022419bfd03ca75d4`.
-- Engine/extension: ERPNext 17 development / ATLASERP 0.4.0.
+- Engine/extension: ERPNext 17 development / ATLASERP 0.4.1.
 - Installed packages: Frappe, ERPNext, ATLAS extension, HRMS, WhatsApp and CRM.
-- Application image identity:
-  `sha256:6a35e706afda37ebbd90bda1aece700a08bb70d2ba6e5719ad9c9bf5beeedb6e`.
-- Frontend image identity:
-  `sha256:7809002cc6aa08dd4ef433062d93817646a604508ab657a704a209d6e9762d88`.
+- Application OCI image index identity:
+  `sha256:3995e479333beeb46ad2a34e1f966368fed47554d7dbaba53b9255f6fe1fde57`.
+- Frontend OCI image index identity:
+  `sha256:7d20404b7af4cf03d7254e840f2c46a2c72835b1e4b8d0b86074104cb2362a95`.
+
+## POS entry release — 0.4.1
+
+The new `/atlas-pos` entry and scoped native handoff are documented in
+[POS_READINESS.md](POS_READINESS.md). The opening dialog pins the verified
+company/profile and uses company currency for the opening float. The new POS
+bundle is `point-of-sale.bundle.5ER4GZUT.js`; other app manifest keys remain intact.
+
+Isolated staging passed the readiness/access fixtures, HTTP checks and company
+account regressions before rollout. Browser verification confirmed the selected
+Street Pizza register, MAD opening amount and Change register navigation without
+submitting an opening. Entry layout checks passed at 1024×768 and 390×844.
+
+Live HTTPS guest/authentication/API/assets checks passed, as did both invoice
+type/company/account regressions and the existing cashier's resumable Street
+Pizza context with MAD. HRMS and CRM HTML/built assets, authenticated realtime
+WebSocket/polling and foreign/missing cross-site origin rejection also passed.
+The browser confirmed the live register page; Administrator correctly sees the
+Street Pizza shift owned by the existing cashier as In use. No assignment or
+session ownership was changed by the release.
+
+Live before/after counts matched: Company 2, Item 63, Item Price 63, POS Profile 2,
+Sales Invoice 2, POS Invoice 0, POS Opening Entry 2, POS Closing Entry 0, GL Entry 4
+and Stock Ledger Entry 0. Those transactions/openings are pre-existing records;
+the release checks posted none. All five application/frontend services use the
+new image pair; MariaDB and Redis were retained. Docker runtime configuration
+identities are `sha256:ac4d2212ba3295a18835c3a6bf2cc7520cf34533d61635001bab549ac2ede8d7`
+and `sha256:ba016c6b576a9f3edcc0c95e4bd8ae100330f1c80a76deec6d16764322e34f3c`.
+
+Traffic and background jobs were paused for a fresh full live backup, reported
+by the server as `20261007_012957-erp_atlasuse_site-*`. The environment is saved
+privately as `.env.before-readiness-f61a96d850`; the persistent POS asset manifest
+is saved as `sites/assets/assets.json.before-readiness-f61a96d850`. The rollback
+pair is `atlaserp:cbc6600c94` / `atlaserp-frontend:cbc6600c94`. This is a code/assets
+release with no new schema or fixture changes. Runtime services were recreated
+with `--no-deps`, retaining the completed app-suite setup and existing database,
+Redis and site volumes. For this release, restoring the prior environment/image
+pair and asset manifest plus clearing site cache reverses the application change.
+No database restore was performed; an isolated restore drill remains pending.
+
+The image recipes are `deploy/Dockerfile.pos-release` and
+`deploy/Dockerfile.frontend-pos-release`. They build the changed ERP bundle and
+extension assets on the installed app suite; no HR/CRM package is reinstalled.
+The final build parents were `atlaserp:93711f52db` and
+`atlaserp-frontend:93711f52db`, both tested intermediate builds on the
+`cbc6600c94` suite. Run `env/bin/python
+apps/erpnext/scripts/publish-pos-assets.py`, then clear site cache after switching
+the matching pair. Both manifests and all earlier app assets are preserved.
+
+## Existing application suite
 
 HRMS and CRM were installed and migrated on isolated staging before the live
 schema installation. Versions, app routes and results are in
@@ -23,7 +73,7 @@ schema installation. Versions, app routes and results are in
 websocket services use the same application image.
 
 A full backup was taken after pausing traffic and background jobs immediately
-before installation: `20261006_223215-erp_atlasuse_site-*`. The original environment
+before the earlier HRMS/CRM installation: `20261006_223215-erp_atlasuse_site-*`. The original environment
 is saved privately as `.env.before-app-suite-7488df70fe`. The previous image pair
 is `atlaserp:65233c3cf3` / `atlaserp-frontend:65233c3cf3`. App installation changes
 schemas and installed-app records: rollback requires the matching pre-install

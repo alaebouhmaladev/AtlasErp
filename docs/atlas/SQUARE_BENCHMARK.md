@@ -13,14 +13,15 @@ No printer model, payment processor or router host is assumed.
 
 ## What exists today
 
-ATLASERP 0.4.0 has the ATLAS workspace/theme, company/brand/branch/team metadata,
+ATLASERP 0.4.1 retains the ATLAS workspace/theme, company/brand/branch/team metadata,
 Street Pizza's 63-item demo menu, native ERP checkout, stock/accounting engine,
 customer entry pages and installed HRMS/CRM applications. Menu preview is
 read-only. Native ERP features are reusable building blocks: their availability
 does not mean the corresponding ATLAS tablet, offline or restaurant workflow is
 complete. Generic ERP API permissions still need an operational scope audit.
 
-The first implementation against this benchmark is **0.4.1 register readiness**:
+The first implementation against this benchmark is **0.4.1 register readiness**
+([cashier guide and verification](POS_READINESS.md)):
 `/atlas-pos` checks the authenticated operator's accessible registers, cashier
 assignment, invoice/opening permissions, warehouse, price list, payment mapping,
 cash change and existing sessions. It links to setup for authorized managers and
@@ -252,8 +253,8 @@ translation/touch states where relevant and a concise record of evidence.
 
 ## Immediate next work
 
-Finish and verify MOB-01A, then **POS-01A–C and MOB-02–04**. Register/device scopes
-must be established before sale/offline APIs can be trusted. Continue the online
+MOB-01A is delivered and verified. Continue with **POS-01A–C and MOB-02–04**.
+Register/device scopes must be established before sale/offline APIs can be trusted. Continue the online
 sale and closing path, then offline recovery, then the multi-device restaurant
 flow. HR/CRM installation remains available; it is not the priority dependency
 for a working restaurant till.

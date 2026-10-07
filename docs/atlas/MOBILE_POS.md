@@ -65,7 +65,7 @@ flowchart LR
 | Component | Responsibility |
 | --- | --- |
 | Planned `mobile/atlas_pos/` | Flutter screens, application state, API client, local database, hardware adapters |
-| Planned `apps/atlas_erp/atlas_erp/pos_api/` | Versioned POS operations, authorization, request deduplication and register context |
+| `apps/atlas_erp/atlas_erp/pos_api/` | Delivered read-only register readiness/context; versioned transaction operations, request deduplication and device authorization remain planned |
 | Planned shop hub | Branch-local shared order authority, paired device registry, durable kitchen/print routing and cloud synchronization; deployment/runtime chosen in a tested prototype |
 | Existing ERPNext | Financial and stock document lifecycle; no direct ledger writes from the app |
 | Restaurant extension | Unpaid orders, tables, modifiers, kitchen tickets and settlement links |
