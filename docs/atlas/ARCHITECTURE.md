@@ -21,8 +21,10 @@ Browser / tablet
 ATLASUSE CRM ↔ future authenticated integration adapter ↔ ATLASERP
 ```
 
-Planned native POS adds a Flutter Android/iOS client, local catalog/cart/outbox,
-hardware adapters and versioned authenticated POS operations in `atlas_erp`.
+The Android-only native preview in `mobile/atlas_pos/` adds a Java/Android Views
+client with canonical demo catalog, cart and SQLite drafts. It supersedes the
+earlier Flutter recommendation; iOS is outside this delivery. Sale outbox,
+hardware adapters and versioned authenticated POS operations remain planned.
 Tablets, kitchen/customer screens and supported network printers connect through
 the same shop router. A planned local hub coordinates shared orders and device
 routing during WAN outages; printer models/transports are configurable adapters.
@@ -37,6 +39,7 @@ for the Android-first decision, offline boundaries and hardware acceptance gates
 | `apps/atlas_erp/atlas_erp/` | Product hooks, controllers, pages, assets, future doctypes and patches |
 | `compose.yaml`, `scripts/` | Development runtime and commands |
 | `docs/atlas/` | Product decisions, backlog and release evidence |
+| `mobile/atlas_pos/` | Native Android POS preview; no financial posting yet |
 
 Use custom fields, fixtures, supported hooks, country configuration and separate
 controllers before changing core files. Record unavoidable core patches with an

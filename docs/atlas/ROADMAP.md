@@ -2,17 +2,22 @@
 
 The expanded Square capability benchmark, 50-area gap register and small release
 tickets are in [SQUARE_BENCHMARK.md](SQUARE_BENCHMARK.md). It is the current breadth
-target; existing mobile/POS tickets remain the implementation sequence. Banking
+target; existing mobile/POS tickets remain the implementation sequence. The
+[MaCaisse benchmark](MACAISSE_BENCHMARK.md) maps the Moroccan restaurant target
+and Android releases A–G to those tickets. Banking
 and electronic payments have separate country/provider dependencies.
 
 The long-term system can serve many industries. The first complete product serves
 **Moroccan retail shops and restaurants**, with Android tablets as the first native
-POS target and iOS following later. It extends through tested industry and country packs.
+POS target. iOS is outside the current delivery scope. It extends through tested
+industry and country packs.
 No calendar deadline is assumed; phases advance when their exit criteria pass.
 
-The Android/iOS delivery phases, restaurant scope, required offline cash, pilot hardware
+The Android delivery phases, restaurant scope, required offline cash, pilot hardware
 and small implementation slices are recorded in [MOBILE_POS.md](MOBILE_POS.md).
-This is planned work; the current deployed checkout still uses native ERP screens.
+The local Android draft preview 0.1 is implemented; payments, offline cash and
+shared kitchen operation remain planned. The current deployed checkout uses
+ERP web screens (0.5.0).
 
 ## Complete capability map
 

@@ -29,3 +29,10 @@ erpnext/www/banking.html
 .env.*
 !.env.example
 .atlas/
+
+# Android build outputs and machine-specific SDK configuration
+mobile/**/.gradle/
+mobile/**/build/
+mobile/**/local.properties
+*.apk
+*.aab

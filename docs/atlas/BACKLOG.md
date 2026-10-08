@@ -6,7 +6,7 @@ implemented slice is MOB-01A register readiness; POS-01A–C operational registe
 configuration/native API scopes and the Android app follow. Readiness does not
 complete register provisioning, safe concurrent opening or offline cash.
 
-Status: **Business setup, shared theme, customer entry pages, demo catalog and HR/CRM applications deployed (ATLASERP 0.4.0)**.
+Status: **Business setup, shared theme, demo catalog and HR/CRM deployed; web split tenders, tips and service extras added in ATLASERP 0.5.0. Android local draft preview 0.1 is separate from that deployed cashier workflow.**
 The company/brand/branch/team implementation is documented in `ONBOARDING.md`.
 The Street Pizza development dataset includes 63 items and a configured cash POS
 profile. Guided general catalog/POS setup and the custom transaction workflow
@@ -14,12 +14,16 @@ remain future tickets; demo master data does not complete those product gates.
 First vertical: retail and POS. Each ID is a bounded, independently reviewable task.
 
 Next product direction: Android tablet POS for retail/counter sales and restaurant
-service, then iOS. Offline cash is required before the first commercial pilot;
+service. iOS is outside the current delivery scope. Offline cash is required
+before the first commercial pilot;
 Use the same shop router for supported tablets/screens/printers, with configurable
 printer adapters and a local hub for shared offline restaurant operation. Epson
 is the initial preference, not a required printer model. Begin with register
 readiness and the app/toolchain foundation, keeping durable local storage in
-the initial design.
+the initial design. The Android preview 0.1 now implements the canonical demo
+menu, required meal choices, cart and local SQLite drafts. It does not complete
+MOB-03–05,07–11 or connected restaurant service. See the
+[MaCaisse benchmark](MACAISSE_BENCHMARK.md) for the focused implementation sequence.
 Mobile phases, MOB-01–MOB-11 and LAN-01–LAN-07 are recorded in [MOBILE_POS.md](MOBILE_POS.md).
 The shared posting and restaurant delivery slices remain in `POS_WORKFLOW.md`.
 

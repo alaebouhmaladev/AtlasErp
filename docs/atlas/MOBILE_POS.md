@@ -1,8 +1,9 @@
 # ATLAS POS — Android tablet first
 
-Prepared 2026-10-06. This is a product and implementation plan, not a released
-mobile application. Android tablets are the first delivery target; iPad/iPhone
-follow after the Android restaurant workflow is proven. The user confirmed that
+Prepared 2026-10-06; updated 2026-10-08. The Android local draft preview 0.1 is
+implemented; cashier transactions, offline sales and shared device operation
+remain planned. Android tablets are the current native delivery target; iOS is
+outside the present implementation scope. The user confirmed that
 **offline cash sales are essential** and wants tablets, screens, printers and
 other supported devices connected through **the same shop Wi-Fi router**.
 Printing must be configurable rather than tied to one printer model. Epson is
@@ -39,9 +40,12 @@ The following architecture and delivery order are our proposed ATLAS design.
 
 ## Architecture decision
 
-Recommend **Flutter** for a shared Android/iOS interface and application logic,
-with native Kotlin/Swift adapters where hardware requires a vendor SDK. Validate
-this choice on the actual tablet and printer before committing to those devices.
+Use **native Android** for the current Android-only delivery: Java domain/storage
+and Android Views for the preview, with native hardware adapters added after
+qualification. This supersedes the earlier Flutter recommendation following the
+Android-only product direction. Domain, storage and future API/device contracts
+remain separate from the UI. Validate on the actual tablet and printer before
+committing to those devices.
 An embedded ERP web page alone will not supply the required local storage,
 hardware behavior or restaurant workflows.
 
@@ -59,12 +63,11 @@ flowchart LR
   API --> ERP[ERPNext document validation and posting]
   ERP --> Office[ATLASERP owner backoffice]
   API --> Restaurant[Restaurant orders and kitchen tickets]
-  Later[iOS app: later release] --> API
 ```
 
 | Component | Responsibility |
 | --- | --- |
-| Planned `mobile/atlas_pos/` | Flutter screens, application state, API client, local database, hardware adapters |
+| `mobile/atlas_pos/` | Delivered native Android draft preview, menu/cart and SQLite; authenticated API client, sale outbox and hardware adapters remain planned |
 | `apps/atlas_erp/atlas_erp/pos_api/` | Delivered read-only register readiness/context; versioned transaction operations, request deduplication and device authorization remain planned |
 | Planned shop hub | Branch-local shared order authority, paired device registry, durable kitchen/print routing and cloud synchronization; deployment/runtime chosen in a tested prototype |
 | Existing ERPNext | Financial and stock document lifecycle; no direct ledger writes from the app |
@@ -94,7 +97,7 @@ Audit generic ERP APIs and existing whitelisted POS helpers as well as new APIs.
 | 3 — Connected restaurant service | Paired devices on one router, local shop hub, tables, takeaway/delivery orders, waiter orders, kitchen routing/display, statuses, table transfer and split settlement | With WAN disconnected, waiter → till → kitchen updates agree; concurrent edits, kitchen retries and settlement retries preserve orders and produce the correct invoice(s) after sync |
 | 4 — Owner operations | Brands/branches, ingredient recipes and wastage, buying, counts, transfers, staff controls, reports, loyalty and promotions | Branch reports match posted records; ingredients and purchasing reconcile; operator permissions tested through APIs |
 | 5 — Customer channels and payments | QR menu/order flow, delivery dispatch, online storefront and country/provider payment integrations | Orders reach the right branch; payment callbacks are authenticated, deduplicated and reconciled |
-| 6 — iOS and expansion | iPad POS, iPhone waiter/owner layouts, onboarding/billing/support and country packs | Real iOS hardware checks and store release requirements pass; each country pack has its own pilot and local review |
+| 6 — Platform expansion | Android release distribution, onboarding/billing/support and country packs | Signing/update requirements pass; each country pack has its own pilot and local review; iOS only after a separate scope decision |
 
 An online development build may precede phase 2. **Phase 2 is mandatory before
 the first commercial pilot**, following the user's offline cash requirement.
@@ -109,7 +112,7 @@ coordination and outage checks are also required before commercial use.
 | ID | Bounded task | Acceptance |
 | --- | --- | --- |
 | MOB-01 | Specify register readiness and action permissions | Missing cashier/account/profile and existing-shift cases have actionable owner/cashier messages; no automatic cancellations |
-| MOB-02 | Install/pin Flutter toolchain and create Android app | Debug APK installs on a named device; green/lime tablet layout, French foundation and Arabic RTL direction verified |
+| MOB-02 | Pin Android toolchain and create native Android app | Debug APK installs on a named device; green/lime tablet layout, French foundation and Arabic RTL direction verified |
 | MOB-03 | Device enrollment and cashier authentication | Tokens protected/revocable; restricted user cannot access another site/branch; Administrator credentials not used at the till |
 | MOB-04 | Scoped bootstrap API and catalog cache | Correct brand/branch/register, 63 demo menu prices and required meal choices load; setup blockers identified before checkout |
 | MOB-05 | Session resume/open flow | Own session resumes; another cashier's session explains the block; one profile per register; duplicate opening requests return the same result |
@@ -124,7 +127,10 @@ coordination and outage checks are also required before commercial use.
 
 MOB-01A's read-only web register readiness and native handoff are implemented in
 0.4.1. Its checks do not complete native endpoint guards, safe concurrent opening
-or register provisioning. Next: **POS-01A–C and MOB-02–04**, then the transaction
+or register provisioning. Android preview 0.1 now implements the menu/cart/local
+draft part of MOB-02/06;
+see [MACAISSE_BENCHMARK.md](MACAISSE_BENCHMARK.md) and the mobile README for evidence
+and remaining gates. Next: **POS-01A–C and MOB-03–05**, then the transaction
 and offline path. [SQUARE_BENCHMARK.md](SQUARE_BENCHMARK.md) expands the platform
 scope without duplicating these tickets. Do not describe a cart mockup or
 unconnected APK as a working POS.
